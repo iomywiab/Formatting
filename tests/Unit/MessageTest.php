@@ -117,5 +117,4 @@ class MessageTest extends TestCase
         $message = Message::unsupportedValue(['a', 'b'], 'c', 'title', ['add' => 'red']);
         self::assertSame('Found error. error="Unsupported title" expected="a"|"b" got=non-empty-string(1):"c" name="title" add="red"', $message->toString());
     }
-
 }

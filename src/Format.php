@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace Iomywiab\Library\Formatting;
 
 use Iomywiab\Library\Formatting\Enums\SizeUnitEnum;
-use Iomywiab\Library\Formatting\Exceptions\FormatExceptionInterface;
+use Iomywiab\Library\Formatting\Exceptions\FormatException;
 use Iomywiab\Library\Formatting\Formatters\ImmutableDebugValueFormatter;
+use Iomywiab\Library\Formatting\Formatters\ImmutableListFormatter;
+use Iomywiab\Library\Formatting\Formatters\ImmutableListFormatterInterface;
 use Iomywiab\Library\Formatting\Formatters\ImmutableValueFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableValueFormatterInterface;
+use Iomywiab\Library\Formatting\Helpers\SimpleDiContainer;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class to format different types (mostly scalars) to pretty strings.
@@ -17,79 +21,100 @@ use Iomywiab\Library\Formatting\Formatters\ImmutableValueFormatterInterface;
  */
 class Format
 {
-    private static ?ImmutableValueFormatterInterface $formatter = null;
-    private static ?ImmutableValueFormatterInterface $debugFormatter = null;
+    private static ?ContainerInterface $container = null;
 
     /**
-     * @return ImmutableValueFormatterInterface
+     * @return ContainerInterface
      */
-    public static function getFormatter(): ImmutableValueFormatterInterface
+    public static function getDiContainer(): ContainerInterface
     {
-        if (null === self::$formatter) {
-            self::$formatter = new ImmutableValueFormatter();
+        if (null === self::$container) {
+            self::$container = new SimpleDiContainer();
+            self::$container->set(ImmutableValueFormatter::class, new ImmutableValueFormatter());
+            self::$container->set(ImmutableDebugValueFormatter::class, new ImmutableDebugValueFormatter());
+            self::$container->set(ImmutableListFormatter::class, new ImmutableListFormatter());
+            self::$container->setAlias(ImmutableValueFormatterInterface::class, ImmutableValueFormatter::class);
+            self::$container->setAlias(ImmutableListFormatterInterface::class, ImmutableListFormatter::class);
         }
 
-        return self::$formatter;
+        return self::$container;
     }
 
     /**
-     * @return ImmutableValueFormatterInterface
-     */
-    public static function getDebugFormatter(): ImmutableValueFormatterInterface
-    {
-        if (null === self::$debugFormatter) {
-            self::$debugFormatter = new ImmutableDebugValueFormatter();
-        }
-
-        return self::$debugFormatter;
-    }
-
-    /**
-     * @param ImmutableValueFormatterInterface|null $formatter
+     * @param ContainerInterface|null $container
      * @return void
      */
-    public static function setFormatter(?ImmutableValueFormatterInterface $formatter): void
+    public static function setDiContainer(?ContainerInterface $container): void
     {
-        self::$formatter = $formatter;
-    }
-
-    /**
-     * @param ImmutableValueFormatterInterface|null $formatter
-     * @return void
-     */
-    public static function setDebugFormatter(?ImmutableValueFormatterInterface $formatter): void
-    {
-        self::$debugFormatter = $formatter;
+        self::$container = $container;
     }
 
     /**
      * @param mixed $value
      * @return string
-     * @throws FormatExceptionInterface
+     * @throws FormatException
      */
     public static function toString(mixed $value): string
     {
-        return self::getFormatter()->toString($value);
+        try {
+            /** @var ImmutableValueFormatterInterface $formatter */
+            $formatter = self::getDiContainer()->get(ImmutableValueFormatter::class);
+
+            return $formatter->toString($value);
+        } catch (\Throwable $cause) {
+            throw new FormatException('Unable to format string', $cause);
+        }
     }
 
     /**
      * @param mixed $value
      * @return string
-     * @throws FormatExceptionInterface
+     * @throws FormatException
      */
     public static function toDebugString(mixed $value): string
     {
-        return self::getDebugFormatter()->toString($value);
+        try {
+            /** @var ImmutableValueFormatterInterface $formatter */
+            $formatter = self::getDiContainer()->get(ImmutableDebugValueFormatter::class);
+
+            return $formatter->toString($value);
+        } catch (\Throwable $cause) {
+            throw new FormatException('Unable to format string', $cause);
+        }
     }
 
     /**
      * @param non-negative-int $bytes
      * @param SizeUnitEnum|null $unit
      * @return non-empty-string
-     * @throws FormatExceptionInterface
+     * @throws FormatException
      */
     public static function toHumanSize(int $bytes, null|SizeUnitEnum $unit = null): string
     {
-        return self::getFormatter()->toHumanSize($bytes, $unit);
+        try {
+            /** @var ImmutableValueFormatterInterface $formatter */
+            $formatter = self::getDiContainer()->get(ImmutableValueFormatter::class);
+
+            return $formatter->toHumanSize($bytes, $unit);
+        } catch (\Throwable $cause) {
+            throw new FormatException('Unable to format string', $cause);
+        }
+    }
+
+    /**
+     * @param list<mixed> $list
+     * @return string
+     * @throws FormatException
+     */
+    public static function toValueList(array $list): string
+    {
+        try {
+            /** @var ImmutableValueFormatterInterface $formatter */
+            $formatter = self::getDiContainer()->get(ImmutableListFormatter::class);
+
+            return $formatter->toString($list);
+        } catch (\Throwable $cause) {
+            throw new FormatException('Unable to format string', $cause);
+        }
     }
 }

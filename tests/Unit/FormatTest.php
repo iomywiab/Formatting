@@ -7,6 +7,7 @@ namespace Iomywiab\Tests\Formatting\Unit;
 
 use Iomywiab\Library\Converting\Convert;
 use Iomywiab\Library\Formatting\Enums\SizeUnitEnum;
+use Iomywiab\Library\Formatting\Exceptions\FormatException;
 use Iomywiab\Library\Formatting\Exceptions\FormatExceptionInterface;
 use Iomywiab\Library\Formatting\Format;
 use Iomywiab\Library\Testing\DataTypes\Enum4Testing;
@@ -106,7 +107,7 @@ class FormatTest extends TestCase
 
     /**
      * @return void
-     * @throws FormatExceptionInterface
+     * @throws FormatException
      */
     public function testToHumanSize(): void {
         self::assertSame('2,000 bytes', Format::toHumanSize(2000, SizeUnitEnum::B));
@@ -122,6 +123,16 @@ class FormatTest extends TestCase
         //self::assertSame('1.00 YB', Format::toHumanSize(1<<80));
         //self::assertSame('1.00 RB', Format::toHumanSize(1<<90));
         //self::assertSame('1.00 QB', Format::toHumanSize(1<<100));
+    }
+
+    /**
+     * @return void
+     * @throws FormatException
+     */
+    public function testToValueList(): void
+    {
+        $message = Format::toValueList([1, 'a', true]);
+        self::assertSame('1|"a"|true', $message);
     }
 
 }

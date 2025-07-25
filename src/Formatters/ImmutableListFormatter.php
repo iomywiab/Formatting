@@ -29,7 +29,7 @@ class ImmutableListFormatter extends AbstractImmutableFormatter implements Immut
         if (null === $this->replacer) {
             $string = '';
             $separator = '';
-            foreach ($array as $key => $value) {
+            foreach ($array as $value) {
                 $string .= $separator.$this->valueFormatter->toString($value);
                 $separator = '|';
             }

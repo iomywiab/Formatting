@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Iomywiab\Tests\Formatting\Examples;
 
+use Iomywiab\Library\Formatting\Exceptions\FormatExceptionInterface;
 use Iomywiab\Library\Formatting\Formatters\ImmutableDebugValueFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableValueFormatter;
 use Iomywiab\Library\Formatting\Message\Message;
@@ -13,6 +14,10 @@ use PHPUnit\Framework\TestCase;
 
 class ExampleTest extends TestCase
 {
+    /**
+     * @return void
+     * @throws FormatExceptionInterface
+     */
     public function testFormatters(): void
     {
         $formatter = new ImmutableValueFormatter();
