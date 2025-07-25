@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: Format.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 25/07/2025, 14:11
  * Modified by: pnehls
  */
 
@@ -76,6 +76,19 @@ class Format
     /**
      * @param mixed $value
      * @return string
+     */
+    public static function tryToString(mixed $value): string
+    {
+        try {
+            return self::toString($value);
+        } catch (\Throwable $cause) {
+            return 'n/a';
+        }
+    }
+
+    /**
+     * @param mixed $value
+     * @return string
      * @throws FormatException
      */
     public static function toDebugString(mixed $value): string
@@ -87,6 +100,19 @@ class Format
             return $formatter->toString($value);
         } catch (\Throwable $cause) {
             throw new FormatException('Unable to format string', $cause);
+        }
+    }
+
+    /**
+     * @param mixed $value
+     * @return string
+     */
+    public static function tryToDebugString(mixed $value): string
+    {
+        try {
+            return self::toDebugString($value);
+        } catch (\Throwable $cause) {
+            return 'n/a';
         }
     }
 
@@ -122,6 +148,19 @@ class Format
             return $formatter->toString($list);
         } catch (\Throwable $cause) {
             throw new FormatException('Unable to format string', $cause);
+        }
+    }
+
+    /**
+     * @param array $list
+     * @return string
+     */
+    public static function tryToValueList(array $list): string
+    {
+        try {
+            return self::toValueList($list);
+        } catch (\Throwable $cause) {
+            return 'n/a';
         }
     }
 }
