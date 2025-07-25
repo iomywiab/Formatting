@@ -4,7 +4,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: BoolStringEnum.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 25/07/2025, 14:03
  * Modified by: pnehls
  */
 
@@ -12,18 +12,12 @@ declare(strict_types=1);
 
 namespace Iomywiab\Library\Formatting\Enums;
 
-use AddApptr\Library\Enum\Traits\ExtendedBackedEnumInterface;
-use AddApptr\Library\Enum\Traits\ExtendedBackedEnumTrait;
-use AddApptr\Library\Error\Exceptions\MissingSwitchCaseException;
-
 /**
  * BoolStringEnum
  * Attention! case values must be LOWERCASE (for performance reasons)
  */
-enum BoolStringEnum: string implements ExtendedBackedEnumInterface
+enum BoolStringEnum: string
 {
-    use ExtendedBackedEnumTrait;
-
     case ACTIVATED = 'activated';
     case ACTIVE = 'active';
     case DEACTIVATED = 'deactivated';
@@ -47,7 +41,7 @@ enum BoolStringEnum: string implements ExtendedBackedEnumInterface
      */
     public static function fromBool(mixed $bool): self
     {
-        return true === $bool
+        return (true === $bool)
             ? self::TRUE
             : self::FALSE;
     }
@@ -71,7 +65,6 @@ enum BoolStringEnum: string implements ExtendedBackedEnumInterface
      */
     public function toBool(): bool
     {
-        /** @noinspection PhpUnusedMatchConditionInspection */
         return match ($this) {
             self::ACTIVATED,
             self::ACTIVE,
@@ -90,8 +83,6 @@ enum BoolStringEnum: string implements ExtendedBackedEnumInterface
             self::NO,
             self::OFF,
             self::ZERO => false,
-
-            default => throw new MissingSwitchCaseException(self::cases(), $this, __METHOD__)
         };
     }
 }
