@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Iomywiab\Library\Formatting\Message;
 
+use Iomywiab\Library\Formatting\Formatters\ImmutableListFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableValueFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableValueFormatterInterface;
 
@@ -17,7 +18,7 @@ class ImmutableMessagePartValue implements ImmutableMessagePartInterface
     public function __construct(
         private readonly string $name,
         private readonly mixed $value,
-        ?ImmutableValueFormatterInterface $formatter = null,
+        ImmutableValueFormatterInterface|ImmutableListFormatter|null $formatter = null,
     ) {
         \assert('' !== $this->name);
 

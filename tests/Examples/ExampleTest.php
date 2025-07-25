@@ -26,12 +26,20 @@ class ExampleTest extends TestCase
 
     public function testMessages(): void
     {
+        $message = Message::make('msg');
+        self::assertSame('msg.', $message->toString());
+
         $message = Message::make('msg', ['one'=>1, 'two'=>2]);
         self::assertSame('msg. one=1 two=2', $message->toString());
 
-        $message = Message::error('msg', 'exp', 'val', ['one'=>1, 'two'=>2], ['three'=>3]);
-        self::assertSame('msg. expected="exp" value=non-empty-string(3):"val" errorCount=2 errors=["one"=>1, "two"=>2] three=3', $message->toString());
+        $message = Message::error('int >= 7', 'int < 7', 3, 'age');
+        self::assertSame('Found error. error="int < 7" expected="int >= 7" got=positive-int:3 name="age"', $message->toString());
 
+        $message = Message::error('int => 7', ['int < 7', 'not of type int'], 3.4, 'age', ['add1' => 3, 'add2' => 'abc']);
+        self::assertSame(
+            'Found errors. errorCount=2 error-1="int < 7" error-2="not of type int" expected="int => 7" got=positive-float:3.4 name="age" add1=3 add2="abc"',
+            $message->toString()
+        );
         $message = (new Message('Hello'))
             ->addString('World')
             ->addValue('One', 1)

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Iomywiab\Library\Formatting\Message;
 
+use Iomywiab\Library\Formatting\Enums\MessageValueFormatEnum;
 use Iomywiab\Library\Formatting\Formatters\ImmutableDebugValueFormatter;
+use Iomywiab\Library\Formatting\Formatters\ImmutableListFormatter;
+use Iomywiab\Library\Formatting\Formatters\ImmutableValueFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableValueFormatterInterface;
 
 /**
@@ -30,7 +33,7 @@ class Message implements MessageInterface
     /**
      * @inheritDoc
      */
-    public static function make(string $message, array $values): self
+    public static function make(string $message, ?array $values = null): self
     {
         return (new self($message))->addManyValues($values);
     }
@@ -38,26 +41,79 @@ class Message implements MessageInterface
     /**
      * @inheritDoc
      */
-    public static function error(string $message, string $expected, mixed $value, array|string $errors, null|array $additions = null): self
+    public static function error(array|string $expectation, array|string $errors, mixed $value, ?string $valueName, null|array $keyValues = null): self
     {
-        $msg = (new self($message))
-            ->addValue('expected', $expected)
-            ->addValue('value', $value, true)
-            ->addValue('errorCount', \is_string($errors) ? 1 : \count($errors))
-            ->addValue(\is_string($errors) ? 'error' : 'errors', $errors);
-
-        if (null !== $additions) {
-            $msg->addManyValues($additions);
+        if (\is_array($errors)) {
+            $errorCount = \count($errors);
+            if (1 === $errorCount) {
+                $errors = $errors[\array_key_first($errors)];
+            }
         }
 
-        return $msg;
+        $title = \is_string($errors) ? 'Found error' : 'Found errors';
+        $message = new self($title);
+
+        if (\is_string($errors)) {
+            $message->addValue('Error', $errors);
+        } else {
+            \assert(isset($errorCount) && (1 < $errorCount));
+            $message->addValue('ErrorCount', $errorCount);
+            $index = 0;
+            foreach ($errors as $err) {
+                $index++;
+                $message->addValue('Error-'.$index, $err);
+            }
+        }
+
+        if (\is_string($expectation)) {
+            $expectation = [$expectation];
+        }
+
+        $message->addValue('Expected', $expectation, MessageValueFormatEnum::LIST);
+        $message->addValue('Got', $value, MessageValueFormatEnum::DEBUG);
+
+        if (null !== $valueName) {
+            $message->addValue('Name', $valueName);
+        }
+
+        $message->addManyValues($keyValues);
+
+        return $message;
     }
 
     /**
      * @inheritDoc
      */
-    public function addPart(ImmutableMessagePartInterface $part): self
+    public static function invalidValue(
+        array|string $expectation,
+        mixed $value,
+        ?string $valueName = null,
+        ?array $keyValues = null
+    ): static {
+        return self::error($expectation, 'Invalid '.($valueName ?? 'value'), $value, $valueName, $keyValues);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function unsupportedValue(
+        array|string $expectation,
+        mixed $value,
+        ?string $valueName = null,
+        ?array $keyValues = null
+    ): static {
+        return self::error($expectation, 'Unsupported '.($valueName ?? 'value'), $value, $valueName, $keyValues);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addPart(?ImmutableMessagePartInterface $part): self
     {
+        if (null === $part) {
+            return $this;
+        }
+
         $this->parts[] = $part;
 
         return $this;
@@ -76,29 +132,51 @@ class Message implements MessageInterface
     }
 
     /**
+     * @param MessageValueFormatEnum|ImmutableValueFormatterInterface|null $format
+     * @return ImmutableValueFormatterInterface
+     */
+    private function getFormatter(MessageValueFormatEnum|ImmutableValueFormatterInterface|null $format): ImmutableValueFormatterInterface
+    {
+        if (null === $format) {
+            return new ImmutableValueFormatter();
+        }
+
+        if ($format instanceof ImmutableValueFormatterInterface) {
+            return $format;
+        }
+
+        \assert($format instanceof MessageValueFormatEnum);
+
+        return match ($format) {
+            MessageValueFormatEnum::PLAIN => new ImmutableValueFormatter(),
+            MessageValueFormatEnum::DEBUG => new ImmutableDebugValueFormatter(),
+            MessageValueFormatEnum::LIST => new ImmutableValueFormatter(arrayFormatter: new ImmutableListFormatter()),
+        };
+    }
+
+    /**
      * @inheritDoc
      */
-    public function addValue(string $name, mixed $value, bool|null|ImmutableValueFormatterInterface $forDebug = null): self
+    public function addValue(string $name, mixed $value, MessageValueFormatEnum|ImmutableValueFormatterInterface|null $format = null): self
     {
-        $formatter = match(true) {
-            true === $forDebug => new ImmutableDebugValueFormatter(),
-            false === $forDebug => null,
-            default => $forDebug,
-        };
+        $formatter = $this->getFormatter($format);
+
         return $this->addPart(new ImmutableMessagePartValue($name, $value, $formatter));
     }
 
     /**
      * @inheritDoc
      */
-    public function addManyValues(array $values): self
+    public function addManyValues(?array $values, MessageValueFormatEnum|ImmutableValueFormatterInterface|null $format = null): self
     {
-        if ([] === $values) {
+        if (null === $values || [] === $values) {
             return $this;
         }
 
+        $formatter = $this->getFormatter($format);
+
         foreach ($values as $name => $value) {
-            $this->addValue($name, $value);
+            $this->addValue($name, $value, $formatter);
         }
 
         return $this;

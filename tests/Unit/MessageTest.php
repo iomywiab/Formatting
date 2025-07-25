@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Iomywiab\Tests\Formatting\Unit;
 
-
 use Iomywiab\Library\Formatting\Message\Message;
 use PHPUnit\Framework\TestCase;
 
@@ -16,7 +15,7 @@ class MessageTest extends TestCase
     /**
      * @dataProvider provideTestData
      */
-    public function testMessage(mixed $message, ?array $addStrings, ?array $addValues,  string $expectedString): void
+    public function testMessage(mixed $message, ?array $addStrings, ?array $addValues, string $expectedString): void
     {
         $msg = new Message($message);
 
@@ -27,7 +26,7 @@ class MessageTest extends TestCase
         }
 
         if (null !== $addValues) {
-            foreach ($addValues as $key=>$value) {
+            foreach ($addValues as $key => $value) {
                 $msg->addValue($key, $value);
             }
         }
@@ -58,24 +57,34 @@ class MessageTest extends TestCase
             [null, null, null, ''],
             ['', null, null, ''],
             ['message', null, null, 'message.'],
-            ['message',['msg'], null, 'message. msg.'],
-            ['message',[''], null, 'message.'],
-            ['message',[null], null, 'message.'],
-            ['message',null, ['name'=> 1], 'message. name=1'],
-            ['message',null, ['name1'=> 1,'name2'=> 2], 'message. name1=1 name2=2'],
+            ['message', ['msg'], null, 'message. msg.'],
+            ['message', [''], null, 'message.'],
+            ['message', [null], null, 'message.'],
+            ['message', null, ['name' => 1], 'message. name=1'],
+            ['message', null, ['name1' => 1, 'name2' => 2], 'message. name1=1 name2=2'],
         ];
     }
 
     public function testError(): void
     {
-        $message = Message::error('my message', 'int => 7', 3, 'int < 7');
-        self::assertSame('my message. expected="int => 7" value=positive-int:3 errorCount=1 error="int < 7"', $message->toString());
+        $message = Message::error('int >= 7', 'int < 7', 3, 'age');
+        self::assertSame('Found error. error="int < 7" expected="int >= 7" got=positive-int:3 name="age"', $message->toString());
 
-        $message = Message::error('my message', 'int => 7', 3.1, ['int < 7', 'not of type int'], ['add1' => 3, 'add2' => 'abc']);
+        $message = Message::error('int => 7', ['int < 7', 'not of type int'], 3.4, 'age', ['add1' => 3, 'add2' => 'abc']);
         self::assertSame(
-            'my message. expected="int => 7" value=positive-float:3.1 errorCount=2 errors=[0=>"int < 7", 1=>"not of type int"] add1=3 add2="abc"',
+            'Found errors. errorCount=2 error-1="int < 7" error-2="not of type int" expected="int => 7" got=positive-float:3.4 name="age" add1=3 add2="abc"',
             $message->toString()
         );
+
+        $message = Message::error('expectation', 'error', 'value', 'valueName');
+        self::assertSame('Found error. error="error" expected="expectation" got=non-empty-string(5):"value" name="valueName"', $message->toString());
+
+        $message = Message::error(['a', 'b'], ['green'], 1, 'valueName', ['additionalValue' => 'blue']);
+        self::assertSame('Found error. error="green" expected="a"|"b" got=positive-int:1 name="valueName" additionalValue="blue"', $message->toString());
+
+        $message = Message::error(['a', 'b'], ['green', 'red'], 1, 'valueName', ['additionalValue1' => 'blue', 'additionalValue2' => 'yellow']);
+        self::assertSame('Found errors. errorCount=2 error-1="green" error-2="red" expected="a"|"b" got=positive-int:1 name="valueName" additionalValue1="blue" additionalValue2="yellow"', $message->toString());
+
     }
 
     public function testMake(): void
@@ -96,4 +105,17 @@ class MessageTest extends TestCase
         self::assertSame('my message.', (string)$message);
 
     }
+
+    public static function testInvalidValue(): void
+    {
+        $message = Message::invalidValue('int>9', 'abc', 'title', ['add' => 'red']);
+        self::assertSame('Found error. error="Invalid title" expected="int>9" got=non-empty-string(3):"abc" name="title" add="red"', $message->toString());
+    }
+
+    public function testUnsupportedValue(): void
+    {
+        $message = Message::unsupportedValue(['a', 'b'], 'c', 'title', ['add' => 'red']);
+        self::assertSame('Found error. error="Unsupported title" expected="a"|"b" got=non-empty-string(1):"c" name="title" add="red"', $message->toString());
+    }
+
 }
