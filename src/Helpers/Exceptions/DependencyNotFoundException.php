@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: DependencyNotFoundException.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -17,12 +17,12 @@ use Psr\Container\NotFoundExceptionInterface;
 class DependencyNotFoundException extends \RuntimeException implements NotFoundExceptionInterface
 {
     /**
-     * @param class-string $className
+     * @param string $className
      * @param \Throwable|null $previous
      */
     public function __construct(string $className, ?\Throwable $previous = null)
     {
-        $message = Message::error('Dependency exists', 'Not found/registered', $className, 'className');
+        $message = Message::error('Dependency exists', 'Dependency not found/registered', $className, 'className');
         parent::__construct($message->toString(), 0, $previous);
     }
 }

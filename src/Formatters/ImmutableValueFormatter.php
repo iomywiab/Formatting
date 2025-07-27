@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableValueFormatter.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -25,13 +25,13 @@ use Iomywiab\Library\Formatting\Exceptions\UnsupportedCaseFormatException;
 class ImmutableValueFormatter implements ImmutableValueFormatterInterface
 {
     private readonly ImmutableArrayFormatterInterface $arrayFormatter;
-    private readonly ImmutableObjectFormatterInterface $objectFormatter;
-    private readonly ImmutableResourceFormatterInterface $resourceFormatter;
-    private readonly ImmutableNullFormatterInterface $nullFormatter;
-    private readonly ImmutableStringFormatterInterface $stringFormatter;
     private readonly ImmutableBooleanFormatterInterface $booleanFormatter;
     private readonly ImmutableFloatFormatterInterface $floatFormatter;
     private readonly ImmutableIntegerFormatterInterface $integerFormatter;
+    private readonly ImmutableNullFormatterInterface $nullFormatter;
+    private readonly ImmutableObjectFormatterInterface $objectFormatter;
+    private readonly ImmutableResourceFormatterInterface $resourceFormatter;
+    private readonly ImmutableStringFormatterInterface $stringFormatter;
 
     /**
      * @param ImmutableArrayFormatterInterface|null $arrayFormatter
@@ -66,56 +66,43 @@ class ImmutableValueFormatter implements ImmutableValueFormatterInterface
     /**
      * @inheritDoc
      */
-    public function toString(mixed $value): string
-    {
-        try {
-            $type = DataTypeEnum::fromData($value);
-
-            return match ($type) {
-                DataTypeEnum::ARRAY => /** @var array<array-key,mixed> $value */ $this->arrayFormatter->toString($value),
-                DataTypeEnum::BOOLEAN => /** @var bool $value */ $this->booleanFormatter->toString($value),
-                DataTypeEnum::FLOAT => /** @var float $value */ $this->floatFormatter->toString($value),
-                DataTypeEnum::NULL => $this->nullFormatter->toString($value),
-                DataTypeEnum::INTEGER => /** @var int $value */ $this->integerFormatter->toString($value),
-                DataTypeEnum::OBJECT => /** @var object $value */ $this->objectFormatter->toString($value),
-                DataTypeEnum::STRING => /** @var string $value */ $this->stringFormatter->toString($value),
-                DataTypeEnum::RESOURCE => /** @var resource $value */ $this->resourceFormatter->toString($value),
-                DataTypeEnum::RESOURCE_CLOSED,
-                DataTypeEnum::UNKNOWN => $type->value,
-            };
-        } catch (\Throwable $cause) {
-            throw new FormatException('Unable to print value to string', $cause);
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function toHumanSize(int $bytes, null|SizeUnitEnum $unit = null): string
     {
         \assert(0 <= $bytes);
 
         if (null === $unit) {
             $unit = match (true) {
+                // @phpstan-ignore voku.BooleanAnd, voku.BooleanAndNode, greater.alwaysFalse, voku.Match, booleanAnd.alwaysFalse
                 (1 << 100) > 0 && $bytes >= (1 << 100) => SizeUnitEnum::QB,
+                // @phpstan-ignore voku.BooleanAnd, voku.BooleanAndNode, greater.alwaysFalse, voku.Match, booleanAnd.alwaysFalse
                 (1 << 90) > 0 && $bytes >= (1 << 90) => SizeUnitEnum::RB,
+                // @phpstan-ignore voku.BooleanAnd, voku.BooleanAndNode, greater.alwaysFalse, voku.Match, booleanAnd.alwaysFalse
                 (1 << 80) > 0 && $bytes >= (1 << 80) => SizeUnitEnum::YB,
+                // @phpstan-ignore voku.BooleanAnd, voku.BooleanAndNode, greater.alwaysFalse, voku.Match, booleanAnd.alwaysFalse
                 (1 << 70) > 0 && $bytes >= (1 << 70) => SizeUnitEnum::ZB,
+                // @phpstan-ignore greater.alwaysTrue
                 (1 << 60) > 0 && $bytes >= (1 << 60) => SizeUnitEnum::EB,
+                // @phpstan-ignore greater.alwaysTrue
                 (1 << 50) > 0 && $bytes >= (1 << 50) => SizeUnitEnum::PB,
+                // @phpstan-ignore greater.alwaysTrue
                 (1 << 40) > 0 && $bytes >= (1 << 40) => SizeUnitEnum::TB,
                 $bytes >= (1 << 30) => SizeUnitEnum::GB,
                 $bytes >= (1 << 20) => SizeUnitEnum::MB,
                 $bytes >= (1 << 10) => SizeUnitEnum::KB,
+                // @phpstan-ignore greaterOrEqual.alwaysTrue
                 $bytes >= 0 => SizeUnitEnum::B,
                 default => throw new UnsupportedCaseFormatException($unit),
             };
         }
 
         $size = match ($unit) {
+            // @phpstan-ignore binaryOp.invalid
             SizeUnitEnum::QB => $bytes / (1 << 100),
+            // @phpstan-ignore binaryOp.invalid
             SizeUnitEnum::RB => $bytes / (1 << 90),
+            // @phpstan-ignore binaryOp.invalid
             SizeUnitEnum::YB => $bytes / (1 << 80),
+            // @phpstan-ignore binaryOp.invalid
             SizeUnitEnum::ZB => $bytes / (1 << 70),
             SizeUnitEnum::EB => $bytes / (1 << 60),
             SizeUnitEnum::PB => $bytes / (1 << 50),
@@ -124,11 +111,45 @@ class ImmutableValueFormatter implements ImmutableValueFormatterInterface
             SizeUnitEnum::MB => $bytes / (1 << 20),
             SizeUnitEnum::KB => $bytes / (1 << 10),
             SizeUnitEnum::B => $bytes,
-            default => throw new UnsupportedCaseFormatException($unit),
         };
 
         $decimals = (SizeUnitEnum::B === $unit) ? 0 : 2;
         $postfix = (1 === $bytes) ? 'byte' : $unit->value;
-        return \number_format($size, $decimals).' '.$postfix;
+
+        \assert(\is_float($size) || \is_int($size));
+
+        return \number_format((float)$size, $decimals).' '.$postfix;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function toString(mixed $value): string
+    {
+        try {
+            $type = DataTypeEnum::fromData($value);
+
+            return match ($type) {
+                // @phpstan-ignore argument.type
+                DataTypeEnum::ARRAY => /** @var array<array-key,mixed> $value */ $this->arrayFormatter->toString($value),
+                // @phpstan-ignore argument.type
+                DataTypeEnum::BOOLEAN => /** @var bool $value */ $this->booleanFormatter->toString($value),
+                // @phpstan-ignore argument.type
+                DataTypeEnum::FLOAT => /** @var float $value */ $this->floatFormatter->toString($value),
+                DataTypeEnum::NULL => $this->nullFormatter->toString($value),
+                // @phpstan-ignore argument.type
+                DataTypeEnum::INTEGER => /** @var int $value */ $this->integerFormatter->toString($value),
+                // @phpstan-ignore argument.type
+                DataTypeEnum::OBJECT => /** @var object $value */ $this->objectFormatter->toString($value),
+                // @phpstan-ignore argument.type
+                DataTypeEnum::STRING => /** @var string $value */ $this->stringFormatter->toString($value),
+                // @phpstan-ignore argument.type
+                DataTypeEnum::RESOURCE => /** @var resource $value */ $this->resourceFormatter->toString($value),
+                DataTypeEnum::RESOURCE_CLOSED,
+                DataTypeEnum::UNKNOWN => $type->value,
+            };
+        } catch (\Throwable $cause) {
+            throw new FormatException('Unable to print value to string', $cause);
+        }
     }
 }

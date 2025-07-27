@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableMessagePartValue.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -17,7 +17,7 @@ use Iomywiab\Library\Formatting\Formatters\ImmutableValueFormatterInterface;
 
 class ImmutableMessagePartValue implements ImmutableMessagePartInterface
 {
-    private readonly ?ImmutableValueFormatterInterface $formatter;
+    private readonly ImmutableValueFormatterInterface|ImmutableListFormatter $formatter;
 
     /**
      * @param string $name (actually non-empty-string, but then PHPStan wrongly complains)

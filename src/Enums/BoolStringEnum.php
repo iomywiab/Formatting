@@ -4,7 +4,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: BoolStringEnum.php
  * Project: Formatting
- * Modified at: 25/07/2025, 14:03
+ * Modified at: 27/07/2025, 20:30
  * Modified by: pnehls
  */
 
@@ -47,7 +47,7 @@ enum BoolStringEnum: string
     }
 
     /**
-     * @return non-empty-array<non-empty-string,bool>
+     * @return non-empty-array<array-key,bool>
      */
     public static function toArray(): array
     {
@@ -66,22 +66,38 @@ enum BoolStringEnum: string
     public function toBool(): bool
     {
         return match ($this) {
+            // @phpstan-ignore voku.Match
             self::ACTIVATED,
+                // @phpstan-ignore voku.Match
             self::ACTIVE,
+                // @phpstan-ignore voku.Match
             self::ENABLED,
+                // @phpstan-ignore voku.Match
             self::ON,
+                // @phpstan-ignore voku.Match
             self::ONE,
+                // @phpstan-ignore voku.Match
             self::TRUE,
+                // @phpstan-ignore voku.Match
             self::Y,
+                // @phpstan-ignore voku.Match
             self::YES => true,
 
+            // @phpstan-ignore voku.Match
             self::DEACTIVATED,
+                // @phpstan-ignore voku.Match
             self::DISABLED,
+                // @phpstan-ignore voku.Match
             self::FALSE,
+                // @phpstan-ignore voku.Match
             self::INACTIVE,
+                // @phpstan-ignore voku.Match
             self::N,
+                // @phpstan-ignore voku.Match
             self::NO,
+                // @phpstan-ignore voku.Match
             self::OFF,
+                // @phpstan-ignore voku.Match
             self::ZERO => false,
         };
     }

@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableArrayKeyTypeReplacement.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -19,16 +19,7 @@ class ImmutableArrayKeyTypeReplacement extends AbstractImmutableReplacement
 
     /**
      * @param mixed $value
-     * @return non-empty-string
-     */
-    protected function getTypeString(mixed $value): string
-    {
-        return DataTypeEnum::fromData($value)->toPhpDocName();
-    }
-
-    /**
-     * @param mixed $value
-     * @return non-empty-string
+     * @return string
      */
     public function toString(mixed $value): string
     {
@@ -40,7 +31,9 @@ class ImmutableArrayKeyTypeReplacement extends AbstractImmutableReplacement
             $types = [];
             foreach ($value as $key => $ignore) {
                 $type = $this->getTypeString($key);
-                $types[$type] = true;
+                if (null !== $type) {
+                    $types[$type] = true;
+                }
             }
             \ksort($types);
 
@@ -48,5 +41,14 @@ class ImmutableArrayKeyTypeReplacement extends AbstractImmutableReplacement
         } catch (\Throwable $cause) {
             return $cause->getMessage();
         }
+    }
+
+    /**
+     * @param mixed $value
+     * @return non-empty-string|null
+     */
+    protected function getTypeString(mixed $value): ?string
+    {
+        return DataTypeEnum::fromData($value)->toPhpDocName();
     }
 }

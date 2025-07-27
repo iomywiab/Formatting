@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableResourceFormatter.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -25,6 +25,7 @@ class ImmutableResourceFormatter implements ImmutableResourceFormatterInterface
         }
 
         try {
+            // @phpstan-ignore greater.alwaysTrue
             $id = PHP_VERSION_ID > 80000
                 ? '(id:'.\get_resource_id($value).')'
                 : '';

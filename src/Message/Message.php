@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: Message.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -30,11 +30,19 @@ class Message implements MessageInterface
      */
     public function __construct(null|string $message = null)
     {
-        if (null === $message) {
-            return;
+        $this->addString($message);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addString(null|string $string): self
+    {
+        if (null === $string || '' === $string) {
+            return $this;
         }
 
-        $this->addString($message);
+        return $this->addPart(new ImmutableMessagePartString($string));
     }
 
     /**
@@ -48,11 +56,31 @@ class Message implements MessageInterface
     /**
      * @inheritDoc
      */
-    public static function error(array|string $expectation, array|string $errors, mixed $value, ?string $valueName, null|array $keyValues = null): self
+    public function addPart(?ImmutableMessagePartInterface $part): self
     {
+        if (null === $part) {
+            return $this;
+        }
+
+        $this->parts[] = $part;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function error(
+        array|string $expectation,
+        array|string $errors,
+        mixed $value,
+        ?string $valueName,
+        null|array $keyValues = null
+    ): self {
         if (\is_array($errors)) {
             $errorCount = \count($errors);
             if (1 === $errorCount) {
+                // @phpstan-ignore shipmonk.variableTypeOverwritten
                 $errors = $errors[\array_key_first($errors)];
             }
         }
@@ -73,6 +101,7 @@ class Message implements MessageInterface
         }
 
         if (\is_string($expectation)) {
+            // @phpstan-ignore shipmonk.variableTypeOverwritten
             $expectation = [$expectation];
         }
 
@@ -91,13 +120,41 @@ class Message implements MessageInterface
     /**
      * @inheritDoc
      */
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public static function invalidValue(
         array|string $expectation,
         mixed $value,
         ?string $valueName = null,
         ?array $keyValues = null
     ): static {
+        // @phpstan-ignore return.type
         return self::error($expectation, 'Invalid '.($valueName ?? 'value'), $value, $valueName, $keyValues);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function toString(): string
+    {
+        if ([] === $this->parts) {
+            return '';
+        }
+
+        $string = '';
+        $spacer = '';
+        foreach ($this->parts as $part) {
+            $string .= $spacer.$part->toString();
+            $spacer = ' ';
+        }
+
+        return $string;
     }
 
     /**
@@ -109,33 +166,8 @@ class Message implements MessageInterface
         ?string $valueName = null,
         ?array $keyValues = null
     ): static {
+        // @phpstan-ignore return.type
         return self::error($expectation, 'Unsupported '.($valueName ?? 'value'), $value, $valueName, $keyValues);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function addPart(?ImmutableMessagePartInterface $part): self
-    {
-        if (null === $part) {
-            return $this;
-        }
-
-        $this->parts[] = $part;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function addString(null|string $string): self
-    {
-        if (null === $string || '' === $string) {
-            return $this;
-        }
-
-        return $this->addPart(new ImmutableMessagePartString($string));
     }
 
     /**
@@ -152,6 +184,7 @@ class Message implements MessageInterface
             return $format;
         }
 
+        // @phpstan-ignore function.alreadyNarrowedType, instanceof.alwaysTrue
         \assert($format instanceof MessageValueFormatEnum);
 
         return match ($format) {
@@ -183,36 +216,10 @@ class Message implements MessageInterface
         $formatter = $this->getFormatter($format);
 
         foreach ($values as $name => $value) {
-            $this->addValue($name, $value, $formatter);
+            $this->addValue((string)$name, $value, $formatter);
         }
 
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function toString(): string
-    {
-        if ([] === $this->parts) {
-            return '';
-        }
-
-        $string = '';
-        $spacer = '';
-        foreach ($this->parts as $part) {
-            $string .= $spacer.$part->toString();
-            $spacer = ' ';
-        }
-
-        return $string;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
 }

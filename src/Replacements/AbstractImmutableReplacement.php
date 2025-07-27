@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: AbstractImmutableReplacement.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 27/07/2025, 21:05
  * Modified by: pnehls
  */
 
@@ -25,6 +25,7 @@ abstract class AbstractImmutableReplacement implements ImmutableReplacementInter
      */
     public function getKey(): string
     {
+        // @phpstan-ignore return.type
         return static::KEY;
     }
 }

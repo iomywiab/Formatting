@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableTemplateReplacer.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -18,10 +18,11 @@ use Iomywiab\Library\Formatting\Replacements\Replacements;
 
 class ImmutableTemplateReplacer implements ImmutableReplacerInterface
 {
-    private const START_CHAR = '{';
     private const END_CHAR = '}';
+    private const START_CHAR = '{';
 
-    /** @var array<non-empty-string,ImmutableReplacementInterface> $parts */
+    /** @var list<ImmutableReplacementInterface|string> $parts */
+    // @phpstan-ignore property.uninitializedReadonly
     private readonly array $parts;
 
     /**
@@ -31,7 +32,9 @@ class ImmutableTemplateReplacer implements ImmutableReplacerInterface
      */
     public function __construct(private readonly string $template, ?array $replacements = null)
     {
+        // @phpstan-ignore voku.Identical
         if ('' === $this->template) {
+            // @phpstan-ignore shipmonk.returnInConstructor
             return;
         }
 
@@ -65,7 +68,9 @@ class ImmutableTemplateReplacer implements ImmutableReplacerInterface
                 $parts[] = \mb_substr($template, $end + 1, $start - $end - 1);
                 continue;
             }
+            // @phpstan-ignore function.alreadyNarrowedType, identical.alwaysTrue
             \assert(self::END_CHAR === $next);
+            \assert(\is_int($start) && ($start > $end));
             $end = $i;
             $key = \mb_substr($template, $start + 1, $end - $start - 1);
             $repl = $replacements[$key] ?? null;

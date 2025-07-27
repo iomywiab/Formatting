@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: AllExceptionsTest.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -16,8 +16,13 @@ use Iomywiab\Library\Formatting\Exceptions\MessageFormatException;
 use Iomywiab\Library\Formatting\Exceptions\UnknownSerializeMarkerFormatException;
 use Iomywiab\Library\Formatting\Exceptions\UnsupportedCaseFormatException;
 use Iomywiab\Library\Testing\DataTypes\Stringable4Testing;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(FormatException::class)]
+#[CoversClass(MessageFormatException::class)]
+#[CoversClass(UnknownSerializeMarkerFormatException::class)]
+#[CoversClass(UnsupportedCaseFormatException::class)]
 class AllExceptionsTest extends TestCase
 {
     /**
@@ -29,7 +34,7 @@ class AllExceptionsTest extends TestCase
         foreach ($testData as $testRecord) {
             $exception = $testRecord[0];
             $expectedText = $testRecord[1];
-            self::assertSame($expectedText, $exception->getMessage());
+            self::assertSame($expectedText, \is_string($exception) ? $exception : $exception->getMessage());
         }
     }
 
@@ -45,6 +50,7 @@ class AllExceptionsTest extends TestCase
             [new UnsupportedCaseFormatException('case', new \Exception('test')), 'Unsupported case in match or switch statement. case="case"'],
             [new UnsupportedCaseFormatException([], new \Exception('test')), 'Unsupported case in match or switch statement. case="Array"'],
             [new UnsupportedCaseFormatException(new Stringable4Testing(), new \Exception('test')), 'Unsupported case in match or switch statement. case="Iomywiab\Library\Testing\DataTypes\Stringable4Testing"'],
+            [new UnsupportedCaseFormatException(STDOUT, new \Exception('test')), 'Unsupported case in match or switch statement. case="n/a"'],
         ];
     }
 }

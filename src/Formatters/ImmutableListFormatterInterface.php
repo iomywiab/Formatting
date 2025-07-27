@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableListFormatterInterface.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -16,7 +16,7 @@ use Iomywiab\Library\Formatting\Exceptions\FormatExceptionInterface;
 interface ImmutableListFormatterInterface
 {
     /**
-     * @param array $array
+     * @param array<array-key,mixed> $array
      * @return string
      * @throws FormatExceptionInterface
      */

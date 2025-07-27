@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: MessagePartValueTest.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -11,20 +11,26 @@ declare(strict_types=1);
 
 namespace Iomywiab\Tests\Formatting\Unit;
 
-
+use Iomywiab\Library\Formatting\Formatters\ImmutableBooleanFormatter;
+use Iomywiab\Library\Formatting\Formatters\ImmutableFloatFormatter;
+use Iomywiab\Library\Formatting\Formatters\ImmutableIntegerFormatter;
+use Iomywiab\Library\Formatting\Formatters\ImmutableNullFormatter;
+use Iomywiab\Library\Formatting\Formatters\ImmutableStringFormatter;
+use Iomywiab\Library\Formatting\Formatters\ImmutableValueFormatter;
 use Iomywiab\Library\Formatting\Message\ImmutableMessagePartValue;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(ImmutableMessagePartValue::class)]
+#[UsesClass(ImmutableNullFormatter::class)]
+#[UsesClass(ImmutableValueFormatter::class)]
+#[UsesClass(ImmutableBooleanFormatter::class)]
+#[UsesClass(ImmutableFloatFormatter::class)]
+#[UsesClass(ImmutableIntegerFormatter::class)]
+#[UsesClass(ImmutableStringFormatter::class)]
 class MessagePartValueTest extends TestCase
 {
-    /**
-     * @dataProvider provideTestData
-     */
-    public function testToString(ImmutableMessagePartValue $part, string $expectedString): void
-    {
-        self::assertSame($expectedString, $part->toString());
-    }
-
     /**
      * @return non-empty-list<non-empty-list<mixed>>
      */
@@ -45,5 +51,13 @@ class MessagePartValueTest extends TestCase
             [new ImmutableMessagePartValue('name', ''), 'name=""'],
             [new ImmutableMessagePartValue('name', 'abc'), 'name="abc"'],
         ];
+    }
+
+    /**
+     * @dataProvider provideTestData
+     */
+    public function testToString(ImmutableMessagePartValue $part, string $expectedString): void
+    {
+        self::assertSame($expectedString, $part->toString());
     }
 }

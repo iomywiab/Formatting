@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableFloatFormatter.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -18,10 +18,13 @@ class ImmutableFloatFormatter extends AbstractImmutableFormatter implements Immu
      */
     public function toString(float $value): string
     {
-        if (null===$this->replacer) {
+        if (null === $this->replacer) {
             return $value.(\floor($value) === $value ? '.0' : '');
         }
 
-        return $this->replacer->toString($value);
+        $return = $this->replacer->toString($value);
+        \assert('' !== $return);
+
+        return $return;
     }
 }

@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ExtendedDataTypeEnumTest.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -17,50 +17,12 @@ use Iomywiab\Library\Testing\DataTypes\Enum4Testing;
 use Iomywiab\Library\Testing\DataTypes\IntEnum4Testing;
 use Iomywiab\Library\Testing\DataTypes\Stringable4Testing;
 use Iomywiab\Library\Testing\DataTypes\StringEnum4Testing;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(ExtendedDataTypeEnum::class)]
 class ExtendedDataTypeEnumTest extends TestCase
 {
-    /**
-     * @return void
-     */
-    public function testFromDataForResource(): void
-    {
-        $openResource = \fopen('php://memory', 'rb');
-        self::assertSame(ExtendedDataTypeEnum::RESOURCE, ExtendedDataTypeEnum::fromData($openResource));
-    }
-
-    /**
-     * @return void
-     */
-    public function testFromDataForClosedResource(): void
-    {
-        $closedResource = \fopen('php://memory', 'rb');
-        if (false !== $closedResource) {
-            \fclose($closedResource);
-        }
-
-        self::assertSame(ExtendedDataTypeEnum::CLOSED_RESOURCE, ExtendedDataTypeEnum::fromData($closedResource));
-    }
-
-    /**
-     * @dataProvider provideDataForFromData
-     * @throws \Throwable
-     */
-    public function testFromData(bool $isValid, mixed $value, ExtendedDataTypeEnum $expectedEnum): void
-    {
-        try {
-            self::assertSame($expectedEnum, ExtendedDataTypeEnum::fromData($value));
-            self::assertTrue($isValid);
-        } catch (\Throwable $cause) {
-            if (!$isValid) {
-                $this->expectException($cause::class);
-            }
-
-            throw $cause;
-        }
-    }
-
     /**
      * @return non-empty-list<non-empty-list<mixed>>
      */
@@ -91,16 +53,54 @@ class ExtendedDataTypeEnumTest extends TestCase
     }
 
     /**
-     * @return void
+     * @dataProvider provideDataForFromData
+     * @throws \Throwable
      */
-    public function testToDataType(): void {
-        // Check completeness (with faked assertions)
-        foreach (ExtendedDataTypeEnum::cases() as $case) {
-            $type = $case->toDataType();
-            /** @noinspection PhpConditionAlreadyCheckedInspection */
-            /** @noinspection UnnecessaryAssertionInspection */
-            self::assertInstanceOf(DataTypeEnum::class, $type);
+    public function testFromData(bool $isValid, mixed $value, ExtendedDataTypeEnum $expectedEnum): void
+    {
+        try {
+            self::assertSame($expectedEnum, ExtendedDataTypeEnum::fromData($value));
+            self::assertTrue($isValid);
+        } catch (\Throwable $cause) {
+            if (!$isValid) {
+                $this->expectException($cause::class);
+            }
+
+            throw $cause;
         }
     }
 
+    /**
+     * @return void
+     */
+    public function testFromDataForClosedResource(): void
+    {
+        $closedResource = \fopen('php://memory', 'rb');
+        if (false !== $closedResource) {
+            \fclose($closedResource);
+        }
+
+        self::assertSame(ExtendedDataTypeEnum::CLOSED_RESOURCE, ExtendedDataTypeEnum::fromData($closedResource));
+    }
+
+    /**
+     * @return void
+     */
+    public function testFromDataForResource(): void
+    {
+        $openResource = \fopen('php://memory', 'rb');
+        self::assertSame(ExtendedDataTypeEnum::RESOURCE, ExtendedDataTypeEnum::fromData($openResource));
+    }
+
+    /**
+     * @return void
+     */
+    public function testToDataType(): void
+    {
+        // Check completeness (with faked assertions)
+        foreach (ExtendedDataTypeEnum::cases() as $case) {
+            $type = $case->toDataType();
+            self::assertContains($type, [DataTypeEnum::ARRAY, DataTypeEnum::BOOLEAN, DataTypeEnum::RESOURCE_CLOSED, DataTypeEnum::OBJECT, DataTypeEnum::FLOAT, DataTypeEnum::INTEGER, DataTypeEnum::STRING, DataTypeEnum::NULL, DataTypeEnum::RESOURCE, DataTypeEnum::UNKNOWN]);
+        }
+    }
 }

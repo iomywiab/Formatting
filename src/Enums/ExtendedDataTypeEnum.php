@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ExtendedDataTypeEnum.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -39,6 +39,47 @@ enum ExtendedDataTypeEnum: string
     case UNKNOWN = '?';
 
     /**
+     * @param mixed $value
+     * @return self
+     */
+    public static function fromData(mixed $value): self
+    {
+        $type = DataTypeEnum::fromData($value);
+
+        return match ($type) {
+            // @phpstan-ignore argument.type
+            DataTypeEnum::ARRAY => self::fromArray($value),
+            DataTypeEnum::BOOLEAN => self::BOOLEAN,
+            DataTypeEnum::FLOAT => match (true) {
+                // @phpstan-ignore shipmonk.comparingNonComparableTypes
+                $value < 0.0 => self::NEGATIVE_FLOAT,
+                // @phpstan-ignore shipmonk.comparingNonComparableTypes
+                $value > 0.0 => self::POSITIVE_FLOAT,
+                default => self::NON_NEGATIVE_FLOAT,
+            },
+            DataTypeEnum::INTEGER => match (true) {
+                // @phpstan-ignore shipmonk.comparingNonComparableTypes
+                $value < 0 => self::NEGATIVE_INTEGER,
+                // @phpstan-ignore shipmonk.comparingNonComparableTypes
+                $value > 0 => self::POSITIVE_INTEGER,
+                default => self::NON_NEGATIVE_INTEGER,
+            },
+            DataTypeEnum::NULL => self::NULL,
+            DataTypeEnum::OBJECT => match (true) {
+                $value instanceof \BackedEnum && (\is_string($value->value)) => self::STRING_ENUM,
+                $value instanceof \BackedEnum && (\is_int($value->value)) => self::INT_ENUM,
+                $value instanceof \UnitEnum => self::ENUM,
+                $value instanceof \DateTimeInterface => self::DATETIME,
+                default => self::OBJECT
+            },
+            DataTypeEnum::RESOURCE => self::RESOURCE,
+            DataTypeEnum::RESOURCE_CLOSED => self::CLOSED_RESOURCE,
+            DataTypeEnum::STRING => ('' === $value) ? self::STRING : self::NON_EMPTY_STRING,
+            DataTypeEnum::UNKNOWN => self::UNKNOWN,
+        };
+    }
+
+    /**
      * @param array<array-key,mixed> $value
      * @return self
      */
@@ -60,56 +101,30 @@ enum ExtendedDataTypeEnum: string
     }
 
     /**
-     * @param mixed $value
-     * @return self
-     */
-    public static function fromData(mixed $value): self
-    {
-        $type = DataTypeEnum::fromData($value);
-
-        return match ($type) {
-            DataTypeEnum::ARRAY => self::fromArray($value),
-            DataTypeEnum::BOOLEAN => self::BOOLEAN,
-            DataTypeEnum::FLOAT => match (true) {
-                $value < 0.0 => self::NEGATIVE_FLOAT,
-                $value > 0.0 => self::POSITIVE_FLOAT,
-                default => self::NON_NEGATIVE_FLOAT,
-            },
-            DataTypeEnum::INTEGER => match (true) {
-                $value < 0 => self::NEGATIVE_INTEGER,
-                $value > 0 => self::POSITIVE_INTEGER,
-                default => self::NON_NEGATIVE_INTEGER,
-            },
-            DataTypeEnum::NULL => self::NULL,
-            DataTypeEnum::OBJECT => match (true) {
-                $value instanceof \BackedEnum && (\is_string($value->value)) => self::STRING_ENUM,
-                $value instanceof \BackedEnum && (\is_int($value->value)) => self::INT_ENUM,
-                $value instanceof \UnitEnum => self::ENUM,
-                $value instanceof \DateTimeInterface => self::DATETIME,
-                default => self::OBJECT
-            },
-            DataTypeEnum::RESOURCE => self::RESOURCE,
-            DataTypeEnum::RESOURCE_CLOSED => self::CLOSED_RESOURCE,
-            DataTypeEnum::STRING => ('' === $value) ? self::STRING : self::NON_EMPTY_STRING,
-            DataTypeEnum::UNKNOWN => self::UNKNOWN,
-        };
-    }
-
-    /**
      * @return DataTypeEnum
      */
     public function toDataType(): DataTypeEnum
     {
         return match ($this) {
+            // @phpstan-ignore voku.Match, voku.Match, voku.Match, voku.Match
             self::ARRAY, self::LIST, self::NON_EMPTY_ARRAY, self::NON_EMPTY_LIST => DataTypeEnum::ARRAY,
+            // @phpstan-ignore voku.Match
             self::BOOLEAN => DataTypeEnum::BOOLEAN,
+            // @phpstan-ignore voku.Match
             self::CLOSED_RESOURCE => DataTypeEnum::RESOURCE_CLOSED,
+            // @phpstan-ignore voku.Match, voku.Match, voku.Match, voku.Match, voku.Match
             self::DATETIME, self::ENUM, self::INT_ENUM, self::OBJECT, self::STRING_ENUM => DataTypeEnum::OBJECT,
+            // @phpstan-ignore voku.Match, voku.Match, voku.Match
             self::NEGATIVE_FLOAT, self::NON_NEGATIVE_FLOAT, self::POSITIVE_FLOAT => DataTypeEnum::FLOAT,
+            // @phpstan-ignore voku.Match, voku.Match, voku.Match
             self::NEGATIVE_INTEGER, self::NON_NEGATIVE_INTEGER, self::POSITIVE_INTEGER => DataTypeEnum::INTEGER,
+            // @phpstan-ignore voku.Match, voku.Match
             self::NON_EMPTY_STRING, self::STRING => DataTypeEnum::STRING,
+            // @phpstan-ignore voku.Match
             self::NULL => DataTypeEnum::NULL,
+            // @phpstan-ignore voku.Match
             self::RESOURCE => DataTypeEnum::RESOURCE,
+            // @phpstan-ignore voku.Match
             self::UNKNOWN => DataTypeEnum::UNKNOWN,
         };
     }

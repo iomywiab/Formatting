@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableDebugValueFormatter.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -48,8 +48,10 @@ class ImmutableDebugValueFormatter extends ImmutableValueFormatter
         ?ImmutableFloatFormatterInterface $floatFormatter = null,
         ?ImmutableIntegerFormatterInterface $integerFormatter = null,
     ) {
-            $stringFormatter ??= new ImmutableStringFormatter(new ImmutableTemplateReplacer(self::STRING_TEMPLATE));
-            $integerFormatter ??= new ImmutableIntegerFormatter(new ImmutableTemplateReplacer(self::INT_TEMPLATE));
+        // @phpstan-ignore voku.Coalesce
+        $stringFormatter ??= new ImmutableStringFormatter(new ImmutableTemplateReplacer(self::STRING_TEMPLATE));
+        // @phpstan-ignore voku.Coalesce
+        $integerFormatter ??= new ImmutableIntegerFormatter(new ImmutableTemplateReplacer(self::INT_TEMPLATE));
         parent::__construct(
             $arrayFormatter ?? new ImmutableArrayFormatter($this, $this, new ImmutableTemplateReplacer(self::ARRAY_TEMPLATE)),
             $objectFormatter ?? new ImmutableObjectFormatter($stringFormatter, $integerFormatter, new ImmutableTemplateReplacer(self::OBJECT_TEMPLATE)),
@@ -58,7 +60,7 @@ class ImmutableDebugValueFormatter extends ImmutableValueFormatter
             $stringFormatter,
             $booleanFormatter ?? new ImmutableBooleanFormatter(new ImmutableTemplateReplacer(self::BOOLEAN_TEMPLATE)),
             $floatFormatter ?? new ImmutableFloatFormatter(new ImmutableTemplateReplacer(self::FLOAT_TEMPLATE)),
-                $integerFormatter
+            $integerFormatter
         );
     }
 }

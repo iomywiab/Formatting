@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: Replacements.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -22,8 +22,8 @@ class Replacements
     public static function get(?ImmutableValueFormatterInterface $valueFormatter = null): array
     {
         return [
-            ImmutableArrayKeyTypeReplacement::KEY          => new ImmutableArrayKeyTypeReplacement(),
-            ImmutableArrayKeyExtendedTypesReplacement::KEY => new ImmutableArrayKeyExtendedTypesReplacement(),
+            ImmutableArrayKeyTypeReplacement::KEY            => new ImmutableArrayKeyTypeReplacement(),
+            ImmutableArrayKeyExtendedTypesReplacement::KEY   => new ImmutableArrayKeyExtendedTypesReplacement(),
             ImmutableArraySizeReplacement::KEY               => new ImmutableArraySizeReplacement(),
             ImmutableArrayValueTypeReplacement::KEY          => new ImmutableArrayValueTypeReplacement(),
             ImmutableArrayValueExtendedTypesReplacement::KEY => new ImmutableArrayValueExtendedTypesReplacement(),

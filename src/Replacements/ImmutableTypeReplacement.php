@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableTypeReplacement.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -19,10 +19,10 @@ class ImmutableTypeReplacement extends AbstractImmutableReplacement
 
     /**
      * @param mixed $value
-     * @return non-empty-string
+     * @return string
      */
     public function toString(mixed $value): string
     {
-        return DataTypeEnum::fromData($value)->toPhpDocName();
+        return DataTypeEnum::fromData($value)->toPhpDocName() ?? '';
     }
 }

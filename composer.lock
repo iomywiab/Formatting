@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1bf3d68399e5b8f13a2708b9b6dc1647",
+    "content-hash": "a3573dbb09cba9e52dd85eb131aafb02",
     "packages": [
         {
             "name": "iomywiab/converting",
-            "version": "v1.3.0-stable",
+            "version": "v1.3.1-stable",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iomywiab/Converting.git",
-                "reference": "dc9c937d7f7160d18ce080c4288b64852c6c5f44"
+                "reference": "111e5295fc97b913b11b1dc982b7480c5bd5e370"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iomywiab/Converting/zipball/dc9c937d7f7160d18ce080c4288b64852c6c5f44",
-                "reference": "dc9c937d7f7160d18ce080c4288b64852c6c5f44",
+                "url": "https://api.github.com/repos/iomywiab/Converting/zipball/111e5295fc97b913b11b1dc982b7480c5bd5e370",
+                "reference": "111e5295fc97b913b11b1dc982b7480c5bd5e370",
                 "shasum": ""
             },
             "require": {
@@ -25,7 +25,7 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "*",
-                "iomywiab/testing": "^1.2",
+                "iomywiab/testing": "^1.3",
                 "nunomaduro/collision": "*",
                 "pdepend/pdepend": "*",
                 "phpcompatibility/php-compatibility": "*",
@@ -71,9 +71,9 @@
             ],
             "support": {
                 "issues": "https://github.com/iomywiab/Converting/issues",
-                "source": "https://github.com/iomywiab/Converting/tree/v1.3.0-stable"
+                "source": "https://github.com/iomywiab/Converting/tree/v1.3.1-stable"
             },
-            "time": "2025-07-24T10:46:04+00:00"
+            "time": "2025-07-26T12:56:44+00:00"
         }
     ],
     "packages-dev": [
@@ -1698,16 +1698,16 @@
         },
         {
             "name": "iomywiab/testing",
-            "version": "v1.2.0-stable",
+            "version": "v1.3.1-stable",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iomywiab/Testing.git",
-                "reference": "a1530bfe1c70b6c9e4f02224476a886489386df8"
+                "reference": "81027572ad5fba1f4df7f337588eb4ab4c90b92b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iomywiab/Testing/zipball/a1530bfe1c70b6c9e4f02224476a886489386df8",
-                "reference": "a1530bfe1c70b6c9e4f02224476a886489386df8",
+                "url": "https://api.github.com/repos/iomywiab/Testing/zipball/81027572ad5fba1f4df7f337588eb4ab4c90b92b",
+                "reference": "81027572ad5fba1f4df7f337588eb4ab4c90b92b",
                 "shasum": ""
             },
             "require": {
@@ -1759,9 +1759,9 @@
             ],
             "support": {
                 "issues": "https://github.com/iomywiab/Testing/issues",
-                "source": "https://github.com/iomywiab/Testing/tree/v1.2.0-stable"
+                "source": "https://github.com/iomywiab/Testing/tree/v1.3.1-stable"
             },
-            "time": "2025-07-23T19:24:20+00:00"
+            "time": "2025-07-26T12:37:01+00:00"
         },
         {
             "name": "kelunik/certificate",
@@ -2176,16 +2176,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.5.0",
+            "version": "v5.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "ae59794362fe85e051a58ad36b289443f57be7a9"
+                "reference": "221b0d0fdf1369c71047ad1d18bb5880017bbc56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/ae59794362fe85e051a58ad36b289443f57be7a9",
-                "reference": "ae59794362fe85e051a58ad36b289443f57be7a9",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/221b0d0fdf1369c71047ad1d18bb5880017bbc56",
+                "reference": "221b0d0fdf1369c71047ad1d18bb5880017bbc56",
                 "shasum": ""
             },
             "require": {
@@ -2228,9 +2228,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.5.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.6.0"
             },
-            "time": "2025-05-31T08:24:38+00:00"
+            "time": "2025-07-27T20:03:57+00:00"
         },
         {
             "name": "nunomaduro/collision",
@@ -3081,16 +3081,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.19",
+            "version": "2.1.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "473a8c30e450d87099f76313edcbb90852f9afdf"
+                "reference": "a9ccfef95210f92ba6feea6e8d1eef42b5605499"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/473a8c30e450d87099f76313edcbb90852f9afdf",
-                "reference": "473a8c30e450d87099f76313edcbb90852f9afdf",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a9ccfef95210f92ba6feea6e8d1eef42b5605499",
+                "reference": "a9ccfef95210f92ba6feea6e8d1eef42b5605499",
                 "shasum": ""
             },
             "require": {
@@ -3135,7 +3135,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-21T19:58:24+00:00"
+            "time": "2025-07-26T20:45:26+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
@@ -4709,12 +4709,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "0b1f127d644a2ff8af1c8bd2955dbe3c11812017"
+                "reference": "81355a1946c1cb0d4dd1966161015b8522f30173"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0b1f127d644a2ff8af1c8bd2955dbe3c11812017",
-                "reference": "0b1f127d644a2ff8af1c8bd2955dbe3c11812017",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/81355a1946c1cb0d4dd1966161015b8522f30173",
+                "reference": "81355a1946c1cb0d4dd1966161015b8522f30173",
                 "shasum": ""
             },
             "conflict": {
@@ -4911,7 +4911,7 @@
                 "elefant/cms": "<2.0.7",
                 "elgg/elgg": "<3.3.24|>=4,<4.0.5",
                 "elijaa/phpmemcacheadmin": "<=1.3",
-                "elmsln/haxcms": "<11.0.8",
+                "elmsln/haxcms": "<11.0.14",
                 "encore/laravel-admin": "<=1.8.19",
                 "endroid/qr-code-bundle": "<3.4.2",
                 "enhavo/enhavo-app": "<=0.13.1",
@@ -5661,7 +5661,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-22T16:07:09+00:00"
+            "time": "2025-07-25T21:05:39+00:00"
         },
         {
             "name": "sebastian/cli-parser",

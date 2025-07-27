@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: SimpleDiContainer.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -12,42 +12,37 @@ declare(strict_types=1);
 namespace Iomywiab\Library\Formatting\Helpers;
 
 use Iomywiab\Library\Formatting\Helpers\Exceptions\DependencyNotFoundException;
-use Psr\Container\ContainerInterface;
 
-class SimpleDiContainer implements ContainerInterface
+class SimpleDiContainer implements SimpleDiContainerInterface
 {
     /** @var array<non-empty-string,non-empty-string> $aliases */
     private array $aliases = [];
-    /** @var array<non-empty-string,object> $container */
+    /** @var array<non-empty-string,callable|object|string> $container */
     private array $container = [];
 
     /**
-     * @param class-string $id
-     * @return object
+     * @inheritDoc
      */
     public function get(string $id): object
     {
-        if (isset($this->container[$id])) {
+        $object = $this->container[$id] ?? $this->container[$this->aliases[$id] ?? null] ?? null;
 
-            $object = $this->container[$id];
-            if (\is_string($object)) {
-                $object = new $object();
-                $this->container[$id] = $object;
-            }
-
-            return $object;
+        if (\is_string($object) || \is_callable($object)) {
+            $object = \is_string($object) ? new $object() : $object();
+            \assert('' !== $id);
+            \assert(\is_object($object));
+            $this->container[$id] = $object;
         }
 
-        if (isset($this->aliases[$id])) {
-            return $this->container[$this->aliases[$id]];
+        if (null === $object) {
+            throw new DependencyNotFoundException($id);
         }
 
-        throw new DependencyNotFoundException($id);
+        return $object;
     }
 
     /**
-     * @param class-string $id
-     * @return bool
+     * @inheritDoc
      */
     public function has(string $id): bool
     {
@@ -55,20 +50,17 @@ class SimpleDiContainer implements ContainerInterface
     }
 
     /**
-     * @param class-string $id
-     * @param callable|object|string $concrete
-     * @return void
+     * @inheritDoc
      */
     public function set(string $id, callable|object|string $concrete): void
     {
+        // @phpstan-ignore voku.NotIdentical
         assert('' !== $id);
         $this->container[$id] = $concrete;
     }
 
     /**
-     * @param class-string $abstract
-     * @param class-string $concrete
-     * @return void
+     * @inheritDoc
      */
     public function setAlias(string $abstract, string $concrete): void
     {

@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableObjectFormatter.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -15,8 +15,8 @@ use Iomywiab\Library\Formatting\Replacers\ImmutableReplacerInterface;
 
 class ImmutableObjectFormatter extends AbstractImmutableFormatter implements ImmutableObjectFormatterInterface
 {
-    private readonly ImmutableStringFormatterInterface $stringFormatter;
     private readonly ImmutableIntegerFormatterInterface $integerFormatter;
+    private readonly ImmutableStringFormatterInterface $stringFormatter;
 
     /**
      * @param ImmutableStringFormatterInterface|null $stringFormatter
@@ -27,8 +27,7 @@ class ImmutableObjectFormatter extends AbstractImmutableFormatter implements Imm
         ?ImmutableStringFormatterInterface $stringFormatter = null,
         ?ImmutableIntegerFormatterInterface $integerFormatter = null,
         ?ImmutableReplacerInterface $replacer = null,
-    )
-    {
+    ) {
         parent::__construct($replacer);
 
         $this->stringFormatter = $stringFormatter ?? new ImmutableStringFormatter();
@@ -41,15 +40,18 @@ class ImmutableObjectFormatter extends AbstractImmutableFormatter implements Imm
     public function toString(object $value): string
     {
         if (null === $this->replacer) {
-            return match(true) {
+            return match (true) {
                 $value instanceof \DateTimeInterface => $value->format(\DateTimeInterface::ATOM),
                 $value instanceof \DateInterval => $value->format('%R'),
                 $value instanceof \Throwable => $this->stringFormatter->toString($value->getMessage()), // BEFORE Stringable
-                $value instanceof \BackedEnum && \is_int($value->value)=> $value->name.'='.$this->integerFormatter->toString($value->value), // BEFORE UnitEnum
-                $value instanceof \BackedEnum && \is_string($value->value)=> $value->name.'='.$this->stringFormatter->toString($value->value), // BEFORE UnitEnum
+                $value instanceof \BackedEnum && \is_int($value->value) => $value->name.'='.$this->integerFormatter->toString($value->value), // BEFORE UnitEnum
+                $value instanceof \BackedEnum && \is_string($value->value) => $value->name.'='.$this->stringFormatter->toString($value->value), // BEFORE UnitEnum
                 $value instanceof \UnitEnum => $value->name,
-                $value instanceof \JsonSerializable => $value->jsonSerialize(),
-                default => $this->stringFormatter->toString((string)$value),
+                $value instanceof \JsonSerializable => (\is_string($string = $value->jsonSerialize()) ? $string : 'n/a'),
+                $value instanceof \Stringable => $this->stringFormatter->toString((string)$value),
+                // @phpstan-ignore argument.type
+                \method_exists($value, 'toString') => $this->stringFormatter->toString($value->toString()),
+                default => 'n/a',
             };
         }
 

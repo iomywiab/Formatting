@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: MessageInterface.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -20,26 +20,20 @@ use Iomywiab\Library\Formatting\Formatters\ImmutableValueFormatterInterface;
 interface MessageInterface extends \Stringable
 {
     /**
-     * @param non-empty-string $message
-     * @param array<non-empty-string,mixed>|null $values
-     */
-    public static function make(string $message, ?array $values = null): self;
-
-    /**
      * @param non-empty-array<array-key,mixed>|non-empty-string $expectation
      * @param non-empty-array<array-key,non-empty-string>|non-empty-string $errors
      * @param mixed $value
      * @param non-empty-string|null $valueName
-     * @param array<array-key,mixed>|null $keyValues
+     * @param array<int|non-empty-string,mixed>|null $keyValues
      * @return self
      */
     public static function error(array|string $expectation, array|string $errors, mixed $value, ?string $valueName, null|array $keyValues = null): self;
 
     /**
-     * @param non-empty-array<array-key,mixed>|non-empty-string $expectation
+     * @param non-empty-array<int|non-empty-string,mixed>|non-empty-string $expectation
      * @param mixed $value
      * @param non-empty-string|null $valueName
-     * @param array<array-key,mixed> $keyValues
+     * @param array<int|non-empty-string,mixed>|null $keyValues
      * @return static
      */
     public static function invalidValue(
@@ -50,10 +44,16 @@ interface MessageInterface extends \Stringable
     ): static;
 
     /**
+     * @param non-empty-string $message
+     * @param array<non-empty-string,mixed>|null $values
+     */
+    public static function make(string $message, ?array $values = null): self;
+
+    /**
      * @param non-empty-array<array-key,mixed>|non-empty-string $expectation
      * @param mixed $value
      * @param non-empty-string|null $valueName
-     * @param array<array-key,mixed> $keyValues
+     * @param array<int|non-empty-string,mixed>|null $keyValues
      * @return static
      */
     public static function unsupportedValue(
@@ -62,6 +62,18 @@ interface MessageInterface extends \Stringable
         ?string $valueName = null,
         ?array $keyValues = null
     ): static;
+
+    /**
+     * @inheritDoc
+     */
+    public function __toString(): string;
+
+    /**
+     * @param array<int|non-empty-string,mixed>|null $values
+     * @param MessageValueFormatEnum|ImmutableValueFormatterInterface|null $format
+     * @return self
+     */
+    public function addManyValues(?array $values, MessageValueFormatEnum|ImmutableValueFormatterInterface|null $format = null): self;
 
     /**
      * @param ImmutableMessagePartInterface|null $part
@@ -84,19 +96,7 @@ interface MessageInterface extends \Stringable
     public function addValue(string $name, mixed $value, MessageValueFormatEnum|ImmutableValueFormatterInterface|null $format = null): self;
 
     /**
-     * @param array<non-empty-string,mixed>|null $values
-     * @param MessageValueFormatEnum|ImmutableValueFormatterInterface|null $format
-     * @return self
-     */
-    public function addManyValues(?array $values, MessageValueFormatEnum|ImmutableValueFormatterInterface|null $format = null): self;
-
-    /**
      * @return string
      */
     public function toString(): string;
-
-    /**
-     * @inheritDoc
-     */
-    public function __toString(): string;
 }

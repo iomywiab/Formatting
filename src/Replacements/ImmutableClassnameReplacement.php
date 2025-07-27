@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableClassnameReplacement.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 27/07/2025, 20:21
  * Modified by: pnehls
  */
 
@@ -17,7 +17,7 @@ class ImmutableClassnameReplacement extends AbstractImmutableReplacement
 
     /**
      * @param mixed $value
-     * @return non-empty-string
+     * @return string
      */
     public function toString(mixed $value): string
     {

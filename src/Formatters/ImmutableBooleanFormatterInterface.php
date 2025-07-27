@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableBooleanFormatterInterface.php
  * Project: Formatting
- * Modified at: 25/07/2025, 13:59
+ * Modified at: 28/07/2025, 00:39
  * Modified by: pnehls
  */
 
@@ -17,7 +17,7 @@ interface ImmutableBooleanFormatterInterface
 {
     /**
      * @param bool $value
-     * @return non-empty-string
+     * @return string
      * @throws FormatExceptionInterface
      */
     public function toString(bool $value): string;
