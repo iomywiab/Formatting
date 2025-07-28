@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: SimpleDiContainerTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 00:39
+ * Modified at: 28/07/2025, 15:47
  * Modified by: pnehls
  */
 
@@ -31,6 +31,7 @@ use Iomywiab\Library\Formatting\Replacements\ImmutableStringLengthReplacement;
 use Iomywiab\Library\Formatting\Replacements\ImmutableValueReplacement;
 use Iomywiab\Library\Formatting\Replacements\Replacements;
 use Iomywiab\Library\Formatting\Replacers\ImmutableTemplateReplacer;
+use Iomywiab\Library\Testing\Values\DataProvider;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
@@ -61,9 +62,12 @@ class SimpleDiContainerTest extends TestCase
         return new \stdClass();
     }
 
+    /**
+     * @return non-empty-array<non-empty-array<mixed>>
+     */
     public static function provideTestData(): array
     {
-        return [
+        $validData = [
             ['abc', null, new \stdClass()],
             ['abc', 'xyz', new \stdClass()],
             ['abc', null, \stdClass::class],
@@ -71,11 +75,13 @@ class SimpleDiContainerTest extends TestCase
             ['abc', null, [self::class, 'getTestObject']],
             ['abc', 'xyz', [self::class, 'getTestObject']],
         ];
+
+        return DataProvider::injectKeys(['id', 'alias', 'concrete'], $validData);
     }
 
     /**
-     * @param string $id
-     * @param string|null $alias
+     * @param class-string $id
+     * @param class-string|null $alias
      * @param callable|object|string $concrete
      * @return void
      * @dataProvider provideTestData
@@ -90,8 +96,9 @@ class SimpleDiContainerTest extends TestCase
         $className = match (true) {
             \is_string($concrete) => $concrete,
             \is_object($concrete) => \get_class($concrete),
-            \is_callable($concrete) => \get_class($concrete()),
+            \is_callable($concrete) => 'stdClass',
         };
+        // @phpstan-ignore argument.type
         $this->checkContainer($container, $id, $alias, $className);
     }
 
@@ -102,7 +109,7 @@ class SimpleDiContainerTest extends TestCase
      * @param class-string|null $className
      * @return void
      */
-    private function checkContainer(SimpleDiContainerInterface $container, string $id, ?string $alias, ?string $className)
+    private function checkContainer(SimpleDiContainerInterface $container, string $id, ?string $alias, ?string $className): void
     {
         if (null === $className) {
             self::assertFalse($container->has($id));
@@ -114,6 +121,7 @@ class SimpleDiContainerTest extends TestCase
         }
 
         self::assertTrue($container->has($id));
+        // @phpstan-ignore nullCoalesce.variable, method.alreadyNarrowedType
         self::assertTrue(null === $alias || $container->has($alias ?? 'invalidKey'));
 
         $object = $container->get($id);

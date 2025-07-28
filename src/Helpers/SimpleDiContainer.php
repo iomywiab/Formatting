@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: SimpleDiContainer.php
  * Project: Formatting
- * Modified at: 28/07/2025, 00:39
+ * Modified at: 28/07/2025, 15:45
  * Modified by: pnehls
  */
 
@@ -25,7 +25,7 @@ class SimpleDiContainer implements SimpleDiContainerInterface
      */
     public function get(string $id): object
     {
-        $object = $this->container[$id] ?? $this->container[$this->aliases[$id] ?? null] ?? null;
+        $object = $this->container[$id] ?? $this->container[$this->aliases[$id] ?? ''] ?? null;
 
         if (\is_string($object) || \is_callable($object)) {
             $object = \is_string($object) ? new $object() : $object();

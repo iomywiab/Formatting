@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableTemplateReplacer.php
  * Project: Formatting
- * Modified at: 28/07/2025, 00:39
+ * Modified at: 28/07/2025, 15:46
  * Modified by: pnehls
  */
 
@@ -22,7 +22,6 @@ class ImmutableTemplateReplacer implements ImmutableReplacerInterface
     private const START_CHAR = '{';
 
     /** @var list<ImmutableReplacementInterface|string> $parts */
-    // @phpstan-ignore property.uninitializedReadonly
     private readonly array $parts;
 
     /**
@@ -34,6 +33,8 @@ class ImmutableTemplateReplacer implements ImmutableReplacerInterface
     {
         // @phpstan-ignore voku.Identical
         if ('' === $this->template) {
+            $this->parts = [];
+
             // @phpstan-ignore shipmonk.returnInConstructor
             return;
         }

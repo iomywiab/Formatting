@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: FormatTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 00:39
+ * Modified at: 28/07/2025, 15:46
  * Modified by: pnehls
  */
 
@@ -81,7 +81,11 @@ use PHPUnit\Framework\TestCase;
 #[UsesClass(ImmutableStringLengthReplacement::class)]
 class FormatTest extends TestCase
 {
-
+    /**
+     * @return non-empty-list<non-empty-list<mixed>>
+     * @throws \Exception
+     */
+    // @phpstan-ignore throws.unusedType
     public static function provideTestDataForString(): array
     {
         $timezone = new \DateTimeZone('UTC');
@@ -142,10 +146,23 @@ class FormatTest extends TestCase
     }
 
     /**
-     * @return non-empty-list<non-empty-list<mixed>>
+     * @return void
      * @throws \Exception
      */
-    // @phpstan-ignore throws.unusedType
+
+    public function testSetDiContainer(): void
+    {
+        $mine = new SimpleDiContainer();
+        $original = Format::getDiContainer();
+        self::assertNotSame($original, $mine);
+
+        Format::setDiContainer($mine);
+        self::assertSame($mine, Format::getDiContainer());
+
+        Format::setDiContainer($original);
+        self::assertSame($original, Format::getDiContainer());
+    }
+
     /**
      * @return void
      * @throws FormatException
@@ -172,7 +189,7 @@ class FormatTest extends TestCase
      * @param mixed $value
      * @param string $expectedString
      * @param string $expectedDebugString
-     * @throws FormatExceptionInterface
+     * @throws \Throwable
      * @dataProvider provideTestDataForString
      */
     public function testToString(bool $isValid, mixed $value, string $expectedString, string $expectedDebugString): void

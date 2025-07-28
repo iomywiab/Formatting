@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableTemplateReplacerTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 00:39
+ * Modified at: 28/07/2025, 09:16
  * Modified by: pnehls
  */
 
@@ -71,6 +71,7 @@ class ImmutableTemplateReplacerTest extends TestCase
 
         /** @noinspection SpellCheckingInspection */
         return [
+            ['', $replacements, new Stringable4Testing(), ''],
             ['{type}', $replacements, new Stringable4Testing(), 'object'],
             ['a{type}', $replacements, new Stringable4Testing(), 'aobject'],
             ['{type}b', $replacements, new Stringable4Testing(), 'objectb'],

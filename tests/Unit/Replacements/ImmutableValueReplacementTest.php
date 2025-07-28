@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableValueReplacementTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 00:39
+ * Modified at: 28/07/2025, 15:30
  * Modified by: pnehls
  */
 
@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Iomywiab\Tests\Formatting\Unit\Replacements;
 
+use Iomywiab\Library\Formatting\Exceptions\FormatExceptionInterface;
 use Iomywiab\Library\Formatting\Formatters\AbstractImmutableFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableArrayFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableObjectFormatter;
@@ -32,6 +33,10 @@ use PHPUnit\Framework\TestCase;
 #[UsesClass(AbstractImmutableReplacement::class)]
 class ImmutableValueReplacementTest extends TestCase
 {
+    /**
+     * @return void
+     * @throws FormatExceptionInterface
+     */
     public function testToString(): void
     {
         self::assertSame('"abc"', (new ImmutableValueReplacement())->toString('abc'));

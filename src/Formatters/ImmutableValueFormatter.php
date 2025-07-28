@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableValueFormatter.php
  * Project: Formatting
- * Modified at: 28/07/2025, 00:39
+ * Modified at: 28/07/2025, 15:45
  * Modified by: pnehls
  */
 
@@ -15,7 +15,6 @@ use Iomywiab\Library\Converting\Convert;
 use Iomywiab\Library\Converting\Enums\DataTypeEnum;
 use Iomywiab\Library\Formatting\Enums\SizeUnitEnum;
 use Iomywiab\Library\Formatting\Exceptions\FormatException;
-use Iomywiab\Library\Formatting\Exceptions\UnsupportedCaseFormatException;
 
 /**
  * Class to format different types (mostly scalars) to pretty strings.
@@ -89,9 +88,7 @@ class ImmutableValueFormatter implements ImmutableValueFormatterInterface
                 $bytes >= (1 << 30) => SizeUnitEnum::GB,
                 $bytes >= (1 << 20) => SizeUnitEnum::MB,
                 $bytes >= (1 << 10) => SizeUnitEnum::KB,
-                // @phpstan-ignore greaterOrEqual.alwaysTrue
-                $bytes >= 0 => SizeUnitEnum::B,
-                default => throw new UnsupportedCaseFormatException($unit),
+                default => SizeUnitEnum::B,
             };
         }
 

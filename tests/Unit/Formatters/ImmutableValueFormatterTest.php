@@ -1,9 +1,9 @@
 <?php
 /*
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
- * File name: ImmutableDebugValueFormatterTest.php
+ * File name: ImmutableValueFormatterTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 15:30
+ * Modified at: 28/07/2025, 15:11
  * Modified by: pnehls
  */
 
@@ -17,7 +17,6 @@ use Iomywiab\Library\Formatting\Exceptions\FormatExceptionInterface;
 use Iomywiab\Library\Formatting\Formatters\AbstractImmutableFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableArrayFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableBooleanFormatter;
-use Iomywiab\Library\Formatting\Formatters\ImmutableDebugValueFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableFloatFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableIntegerFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableObjectFormatter;
@@ -45,11 +44,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(ImmutableDebugValueFormatter::class)]
+#[CoversClass(ImmutableValueFormatter::class)]
 #[UsesClass(AbstractImmutableFormatter::class)]
 #[UsesClass(ImmutableArrayFormatter::class)]
 #[UsesClass(ImmutableObjectFormatter::class)]
-#[UsesClass(ImmutableValueFormatter::class)]
 #[UsesClass(AbstractImmutableReplacement::class)]
 #[UsesClass(ImmutableValueReplacement::class)]
 #[UsesClass(Replacements::class)]
@@ -69,7 +67,7 @@ use PHPUnit\Framework\TestCase;
 #[UsesClass(ImmutableFloatFormatter::class)]
 #[UsesClass(ImmutableStringLengthReplacement::class)]
 #[UsesClass(ImmutableResourceFormatter::class)]
-class ImmutableDebugValueFormatterTest extends TestCase
+class ImmutableValueFormatterTest extends TestCase
 {
     /**
      * @return non-empty-list<non-empty-array<int|non-empty-string,mixed>>
@@ -86,39 +84,39 @@ class ImmutableDebugValueFormatterTest extends TestCase
 
         $validData = [
             // ARRAY
-            [[], 'list(0)<,>:[]'],
-            [[1], 'non-empty-list(1)<non-negative-int,positive-int>:[0=>1]'],
-            [['a' => 1], 'non-empty-array(1)<non-empty-string,positive-int>:["a"=>1]'], // TODO items formatting
+            [[], '[]'],
+            [[1], '[0=>1]'],
+            [['a' => 1], '["a"=>1]'], // TODO items formatting
 
             // BOOLEAN
-            [true, 'bool:true'],
-            [false, 'bool:false'],
+            [true, 'true'],
+            [false, 'false'],
 
             // ENUM
-            [Enum4Testing::ONE, 'unit-enum<Enum4Testing>:ONE'],
-            [IntEnum4Testing::ONE, 'int-enum<IntEnum4Testing>:ONE=1'],
-            [StringEnum4Testing::ONE, 'string-enum<StringEnum4Testing>:ONE="One"'],
+            [Enum4Testing::ONE, 'ONE'],
+            [IntEnum4Testing::ONE, 'ONE=1'],
+            [StringEnum4Testing::ONE, 'ONE="One"'],
 
             // EXCEPTION
-            [new \Exception('test'), 'object<Exception>:"test"'],
+            [new \Exception('test'), '"test"'],
 
             // FLOAT
-            [-1.2, 'negative-float:-1.2'],
-            [-1.0, 'negative-float:-1.0'],
-            [0.0, 'non-negative-float:0.0'],
-            [1.0, 'positive-float:1.0'],
-            [1.2, 'positive-float:1.2'],
+            [-1.2, '-1.2'],
+            [-1.0, '-1.0'],
+            [0.0, '0.0'],
+            [1.0, '1.0'],
+            [1.2, '1.2'],
 
             // INTEGER
-            [-1, 'negative-int:-1'],
-            [0, 'non-negative-int:0'],
-            [1, 'positive-int:1'],
-            ['', 'string(0):""'],
-            ['abc', 'non-empty-string(3):"abc"'],
+            [-1, '-1'],
+            [0, '0'],
+            [1, '1'],
+            ['', '""'],
+            ['abc', '"abc"'],
 
             // OBJECT
-            [new \DateTime('1970-01-01', new \DateTimeZone('UTC')), 'datetime<DateTime>:1970-01-01T00:00:00+00:00'],
-            [new Stringable4Testing(), 'object<Stringable4Testing>:"stringable"'],
+            [new \DateTime('1970-01-01', new \DateTimeZone('UTC')), '1970-01-01T00:00:00+00:00'],
+            [new Stringable4Testing(), '"stringable"'],
 
             // RESOURCE
             [$openResource, 'stream(id:'.$resourceId.')'],
@@ -143,7 +141,7 @@ class ImmutableDebugValueFormatterTest extends TestCase
      */
     public function testFormatter(bool $isValid, mixed $value, string $expectedString): void
     {
-        $formatter = new ImmutableDebugValueFormatter();
+        $formatter = new ImmutableValueFormatter();
         self::assertSame($expectedString, $formatter->toString($value));
     }
 
@@ -153,7 +151,7 @@ class ImmutableDebugValueFormatterTest extends TestCase
      */
     public function testToHumanSize(): void
     {
-        $formatter = new ImmutableDebugValueFormatter();
+        $formatter = new ImmutableValueFormatter();
         self::assertSame('2,000 bytes', $formatter->toHumanSize(2000, SizeUnitEnum::B));
         self::assertSame('0 bytes', $formatter->toHumanSize(0));
         self::assertSame('1 byte', $formatter->toHumanSize(1));
