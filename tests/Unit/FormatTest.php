@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: FormatTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 15:46
+ * Modified at: 28/07/2025, 17:22
  * Modified by: pnehls
  */
 
@@ -182,6 +182,14 @@ class FormatTest extends TestCase
         //self::assertSame('1.00 YB', Format::toHumanSize(1<<80));
         //self::assertSame('1.00 RB', Format::toHumanSize(1<<90));
         //self::assertSame('1.00 QB', Format::toHumanSize(1<<100));
+    }
+
+    /**
+     * @return void
+     */
+    public function testToShortClassName(): void
+    {
+        self::assertSame('Stringable4Testing', Format::toShortClassName(Stringable4Testing::class));
     }
 
     /**

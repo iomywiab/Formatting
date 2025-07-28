@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: Format.php
  * Project: Formatting
- * Modified at: 28/07/2025, 00:39
+ * Modified at: 28/07/2025, 17:22
  * Modified by: pnehls
  */
 
@@ -58,6 +58,36 @@ class Format
     }
 
     /**
+     * @return ContainerInterface
+     */
+    public static function getDiContainer(): ContainerInterface
+    {
+        if (null === self::$container) {
+            self::$container = new SimpleDiContainer();
+            self::$container->set(ImmutableValueFormatter::class, new ImmutableValueFormatter());
+            self::$container->set(ImmutableDebugValueFormatter::class, new ImmutableDebugValueFormatter());
+            self::$container->set(ImmutableListFormatter::class, new ImmutableListFormatter());
+            self::$container->setAlias(ImmutableValueFormatterInterface::class, ImmutableValueFormatter::class);
+            self::$container->setAlias(ImmutableListFormatterInterface::class, ImmutableListFormatter::class);
+        }
+
+        return self::$container;
+    }
+
+    /**
+     * @param class-string $className
+     * @return string
+     */
+    public static function toShortClassName(string $className): string
+    {
+        try {
+            return (new \ReflectionClass($className))->getShortName();
+        } catch (\Throwable $cause) {
+            return $cause->getMessage();
+        }
+    }
+
+    /**
      * @param mixed $value
      * @return string
      */
@@ -90,19 +120,6 @@ class Format
     /**
      * @param mixed $value
      * @return string
-     */
-    public static function tryToString(mixed $value): string
-    {
-        try {
-            return self::toString($value);
-        } catch (\Throwable) {
-            return 'n/a';
-        }
-    }
-
-    /**
-     * @param mixed $value
-     * @return string
      * @throws FormatException
      */
     public static function toString(mixed $value): string
@@ -118,20 +135,16 @@ class Format
     }
 
     /**
-     * @return ContainerInterface
+     * @param mixed $value
+     * @return string
      */
-    public static function getDiContainer(): ContainerInterface
+    public static function tryToString(mixed $value): string
     {
-        if (null === self::$container) {
-            self::$container = new SimpleDiContainer();
-            self::$container->set(ImmutableValueFormatter::class, new ImmutableValueFormatter());
-            self::$container->set(ImmutableDebugValueFormatter::class, new ImmutableDebugValueFormatter());
-            self::$container->set(ImmutableListFormatter::class, new ImmutableListFormatter());
-            self::$container->setAlias(ImmutableValueFormatterInterface::class, ImmutableValueFormatter::class);
-            self::$container->setAlias(ImmutableListFormatterInterface::class, ImmutableListFormatter::class);
+        try {
+            return self::toString($value);
+        } catch (\Throwable) {
+            return 'n/a';
         }
-
-        return self::$container;
     }
 
     /**
