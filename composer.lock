@@ -4,23 +4,24 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a3573dbb09cba9e52dd85eb131aafb02",
+    "content-hash": "4d2963268dc5e5e8c995f4625c13f6d1",
     "packages": [
         {
             "name": "iomywiab/converting",
-            "version": "v1.3.1-stable",
+            "version": "v1.4.0-stable",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iomywiab/Converting.git",
-                "reference": "111e5295fc97b913b11b1dc982b7480c5bd5e370"
+                "reference": "8ef8e6fdf999cbdaa8ea21ff28c013d0c80efedc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iomywiab/Converting/zipball/111e5295fc97b913b11b1dc982b7480c5bd5e370",
-                "reference": "111e5295fc97b913b11b1dc982b7480c5bd5e370",
+                "url": "https://api.github.com/repos/iomywiab/Converting/zipball/8ef8e6fdf999cbdaa8ea21ff28c013d0c80efedc",
+                "reference": "8ef8e6fdf999cbdaa8ea21ff28c013d0c80efedc",
                 "shasum": ""
             },
             "require": {
+                "iomywiab/enums": "^1.0",
                 "php": ">=8.1, <=8.5"
             },
             "require-dev": {
@@ -71,9 +72,75 @@
             ],
             "support": {
                 "issues": "https://github.com/iomywiab/Converting/issues",
-                "source": "https://github.com/iomywiab/Converting/tree/v1.3.1-stable"
+                "source": "https://github.com/iomywiab/Converting/tree/v1.4.0-stable"
             },
-            "time": "2025-07-26T12:56:44+00:00"
+            "time": "2025-07-28T15:12:37+00:00"
+        },
+        {
+            "name": "iomywiab/enums",
+            "version": "v1.0.2-stable",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/iomywiab/Enums.git",
+                "reference": "080a17b5a2639efc83cf8a51ad3d00d6587e8c0e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/iomywiab/Enums/zipball/080a17b5a2639efc83cf8a51ad3d00d6587e8c0e",
+                "reference": "080a17b5a2639efc83cf8a51ad3d00d6587e8c0e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1, <=8.5"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "*",
+                "nunomaduro/collision": "*",
+                "pdepend/pdepend": "*",
+                "phpcompatibility/php-compatibility": "*",
+                "phpmd/phpmd": "*",
+                "phpmetrics/phpmetrics": "*",
+                "phpstan/extension-installer": "*",
+                "phpstan/phpstan": "*",
+                "phpstan/phpstan-deprecation-rules": "*",
+                "phpstan/phpstan-phpunit": "*",
+                "phpstan/phpstan-strict-rules": "*",
+                "phpstan/phpstan-symfony": "*",
+                "phpunit/phpunit": "*",
+                "psalm/plugin-phpunit": "*",
+                "roave/security-advisories": "dev-latest",
+                "sebastian/phpcpd": "*",
+                "shipmonk/composer-dependency-analyser": "*",
+                "shipmonk/phpstan-baseline-per-identifier": "*",
+                "shipmonk/phpstan-rules": "*",
+                "voku/phpstan-rules": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Iomywiab\\Library\\Enums\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "iomywiab",
+                    "email": "u1.iomywiab@secana.de"
+                }
+            ],
+            "description": "Library for PHP enums",
+            "homepage": "https://github.com/iomywiab/Enums",
+            "keywords": [
+                "enum"
+            ],
+            "support": {
+                "issues": "https://github.com/iomywiab/Enums/issues",
+                "source": "https://github.com/iomywiab/Enums/tree/v1.0.2-stable"
+            },
+            "time": "2025-07-26T01:50:30+00:00"
         }
     ],
     "packages-dev": [

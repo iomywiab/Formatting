@@ -4,7 +4,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: BoolStringEnum.php
  * Project: Formatting
- * Modified at: 27/07/2025, 20:30
+ * Modified at: 28/07/2025, 17:15
  * Modified by: pnehls
  */
 
@@ -12,12 +12,17 @@ declare(strict_types=1);
 
 namespace Iomywiab\Library\Formatting\Enums;
 
+use Iomywiab\Library\Enums\Traits\ExtendedBackedEnumInterface;
+use Iomywiab\Library\Enums\Traits\ExtendedBackedEnumTrait;
+
 /**
  * BoolStringEnum
  * Attention! case values must be LOWERCASE (for performance reasons)
  */
-enum BoolStringEnum: string
+enum BoolStringEnum: string implements ExtendedBackedEnumInterface
 {
+    use ExtendedBackedEnumTrait;
+
     case ACTIVATED = 'activated';
     case ACTIVE = 'active';
     case DEACTIVATED = 'deactivated';

@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ExtendedDataTypeEnum.php
  * Project: Formatting
- * Modified at: 28/07/2025, 00:39
+ * Modified at: 28/07/2025, 17:15
  * Modified by: pnehls
  */
 
@@ -12,9 +12,13 @@ declare(strict_types=1);
 namespace Iomywiab\Library\Formatting\Enums;
 
 use Iomywiab\Library\Converting\Enums\DataTypeEnum;
+use Iomywiab\Library\Enums\Traits\ExtendedBackedEnumInterface;
+use Iomywiab\Library\Enums\Traits\ExtendedBackedEnumTrait;
 
-enum ExtendedDataTypeEnum: string
+enum ExtendedDataTypeEnum: string implements ExtendedBackedEnumInterface
 {
+    use ExtendedBackedEnumTrait;
+
     case ARRAY = 'array';
     case BOOLEAN = 'bool';
     case CLOSED_RESOURCE = 'closed-resource';
