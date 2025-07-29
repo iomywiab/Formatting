@@ -3,6 +3,7 @@
 PHP Composer library for value formatting.
 
 ![coverage](docs/coverage-badge.svg)
+![coverage](docs/coverage-date-badge.svg)
 
 ## Quickstart
 
