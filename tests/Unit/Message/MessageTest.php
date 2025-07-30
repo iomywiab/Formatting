@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: MessageTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 17:22
+ * Modified at: 30/07/2025, 13:43
  * Modified by: pnehls
  */
 
@@ -56,20 +56,18 @@ use PHPUnit\Framework\TestCase;
 class MessageTest extends TestCase
 {
     /**
-     * @return non-empty-list<non-empty-list<mixed>>
+     * @return \Generator<array{message: null|string, addStrings: null|non-empty-list<null|string>, addValues: null|non-empty-array<non-empty-string,mixed>, expectedString: string}>
      */
-    public static function provideTestData(): array
+    public static function provideTestData(): \Generator
     {
-        return [
-            [null, null, null, ''],
-            ['', null, null, ''],
-            ['message', null, null, 'message.'],
-            ['message', ['msg'], null, 'message. msg.'],
-            ['message', [''], null, 'message.'],
-            ['message', [null], null, 'message.'],
-            ['message', null, ['name' => 1], 'message. name=1'],
-            ['message', null, ['name1' => 1, 'name2' => 2], 'message. name1=1 name2=2'],
-        ];
+        yield ['message' => null, 'addStrings' => null, 'addValues' => null, 'expectedString' => ''];
+        yield ['message' => '', 'addStrings' => null, 'addValues' => null, 'expectedString' => ''];
+        yield ['message' => 'message', 'addStrings' => null, 'addValues' => null, 'expectedString' => 'message.'];
+        yield ['message' => 'message', 'addStrings' => ['msg'], 'addValues' => null, 'expectedString' => 'message. msg.'];
+        yield ['message' => 'message', 'addStrings' => [''], 'addValues' => null, 'expectedString' => 'message.'];
+        yield ['message' => 'message', 'addStrings' => [null], 'addValues' => null, 'expectedString' => 'message.'];
+        yield ['message' => 'message', 'addStrings' => null, 'addValues' => ['name' => 1], 'expectedString' => 'message. name=1'];
+        yield ['message' => 'message', 'addStrings' => null, 'addValues' => ['name1' => 1, 'name2' => 2], 'expectedString' => 'message. name1=1 name2=2'];
     }
 
     public static function testInvalidValue(): void

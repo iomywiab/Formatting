@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: AllExceptionsTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 00:39
+ * Modified at: 30/07/2025, 13:56
  * Modified by: pnehls
  */
 
@@ -26,31 +26,38 @@ use PHPUnit\Framework\TestCase;
 class AllExceptionsTest extends TestCase
 {
     /**
-     * Please note: Data providers do not work for objects in phpunit process isolation
+     * @return void
      */
-    public function testExceptions(): void
+    public function testExceptionConstruction(): void
     {
-        $testData = self::provideTestData();
-        foreach ($testData as $testRecord) {
-            $exception = $testRecord[0];
-            $expectedText = $testRecord[1];
-            self::assertSame($expectedText, \is_string($exception) ? $exception : $exception->getMessage());
+        $data = self::provideTestData();
+        foreach ($data as $item) {
+            self::assertSame($item['expectedMessage'], $item['exception']->getMessage());
         }
     }
 
     /**
-     * @return non-empty-list<non-empty-list<non-empty-string|\Throwable>>
+     * @return \Generator<array{exception: \Throwable, expectedMessage: non-empty-string} >
      */
-    public static function provideTestData(): array
+    public static function provideTestData(): \Generator
     {
-        return [
-            [new FormatException('message', new \Exception('test')), 'message'],
-            [new MessageFormatException('message', new \Exception('test')), 'message'],
-            [new UnknownSerializeMarkerFormatException('message', new \Exception('test')), 'Unknown serialize marker. value="message"'],
-            [new UnsupportedCaseFormatException('case', new \Exception('test')), 'Unsupported case in match or switch statement. case="case"'],
-            [new UnsupportedCaseFormatException([], new \Exception('test')), 'Unsupported case in match or switch statement. case="Array"'],
-            [new UnsupportedCaseFormatException(new Stringable4Testing(), new \Exception('test')), 'Unsupported case in match or switch statement. case="Iomywiab\Library\Testing\DataTypes\Stringable4Testing"'],
-            [new UnsupportedCaseFormatException(STDOUT, new \Exception('test')), 'Unsupported case in match or switch statement. case="n/a"'],
-        ];
+        yield ['exception' => new FormatException('message', new \Exception('test')), 'expectedMessage' => 'message'];
+        yield ['exception' => new MessageFormatException('message', new \Exception('test')), 'expectedMessage' => 'message'];
+        yield ['exception' => new UnknownSerializeMarkerFormatException('message', new \Exception('test')), 'expectedMessage' => 'Unknown serialize marker. value="message"'];
+        yield ['exception' => new UnsupportedCaseFormatException('case', new \Exception('test')), 'expectedMessage' => 'Unsupported case in match or switch statement. case="case"'];
+        yield ['exception' => new UnsupportedCaseFormatException([], new \Exception('test')), 'expectedMessage' => 'Unsupported case in match or switch statement. case="Array"'];
+        yield ['exception' => new UnsupportedCaseFormatException(new Stringable4Testing(), new \Exception('test')), 'expectedMessage' => 'Unsupported case in match or switch statement. case="Iomywiab\Library\Testing\DataTypes\Stringable4Testing"'];
+        yield ['exception' => new UnsupportedCaseFormatException(STDOUT, new \Exception('test')), 'expectedMessage' => 'Unsupported case in match or switch statement. case="n/a"'];
+    }
+
+    /**
+     * @param \Throwable $exception
+     * @param non-empty-string $expectedMessage
+     * @return void
+     * @dataProvider provideTestData
+     */
+    public function testExceptions(\Throwable $exception, string $expectedMessage): void
+    {
+        self::assertSame($expectedMessage, $exception->getMessage());
     }
 }

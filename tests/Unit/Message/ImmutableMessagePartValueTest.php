@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableMessagePartValueTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 15:31
+ * Modified at: 30/07/2025, 13:30
  * Modified by: pnehls
  */
 
@@ -21,7 +21,6 @@ use Iomywiab\Library\Formatting\Formatters\ImmutableObjectFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableStringFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableValueFormatter;
 use Iomywiab\Library\Formatting\Message\ImmutableMessagePartValue;
-use Iomywiab\Library\Testing\Values\DataProvider;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
@@ -39,27 +38,23 @@ use PHPUnit\Framework\TestCase;
 class ImmutableMessagePartValueTest extends TestCase
 {
     /**
-     * @return non-empty-array<non-empty-array<mixed>>
+     * @return \Generator<non-empty-array<mixed>>
      */
-    public static function provideTestData(): array
+    public static function provideTestData(): \Generator
     {
-        $validData = [
-            ['name', null, 'name=null'],
-            ['name', true, 'name=true'],
-            ['name', false, 'name=false'],
-            ['name', -2.3, 'name=-2.3'],
-            ['name', -1.0, 'name=-1.0'],
-            ['name', 0.0, 'name=0.0'],
-            ['name', 1.0, 'name=1.0'],
-            ['name', 2.3, 'name=2.3'],
-            ['name', -1, 'name=-1'],
-            ['name', 0, 'name=0'],
-            ['name', 1, 'name=1'],
-            ['name', '', 'name=""'],
-            ['name', 'abc', 'name="abc"'],
-        ];
-
-        return DataProvider::injectKeys(['name', 'value', 'expectedString'], $validData);
+        yield ['name' => 'name', 'value' => null, 'expectedString' => 'name=null'];
+        yield ['name' => 'name', 'value' => true, 'expectedString' => 'name=true'];
+        yield ['name' => 'name', 'value' => false, 'expectedString' => 'name=false'];
+        yield ['name' => 'name', 'value' => -2.3, 'expectedString' => 'name=-2.3'];
+        yield ['name' => 'name', 'value' => -1.0, 'expectedString' => 'name=-1.0'];
+        yield ['name' => 'name', 'value' => 0.0, 'expectedString' => 'name=0.0'];
+        yield ['name' => 'name', 'value' => 1.0, 'expectedString' => 'name=1.0'];
+        yield ['name' => 'name', 'value' => 2.3, 'expectedString' => 'name=2.3'];
+        yield ['name' => 'name', 'value' => -1, 'expectedString' => 'name=-1'];
+        yield ['name' => 'name', 'value' => 0, 'expectedString' => 'name=0'];
+        yield ['name' => 'name', 'value' => 1, 'expectedString' => 'name=1'];
+        yield ['name' => 'name', 'value' => '', 'expectedString' => 'name=""'];
+        yield ['name' => 'name', 'value' => 'abc', 'expectedString' => 'name="abc"'];
     }
 
     /**

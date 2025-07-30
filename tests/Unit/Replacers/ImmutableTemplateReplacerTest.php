@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableTemplateReplacerTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 09:16
+ * Modified at: 30/07/2025, 13:40
  * Modified by: pnehls
  */
 
@@ -63,32 +63,30 @@ use PHPUnit\Framework\TestCase;
 class ImmutableTemplateReplacerTest extends TestCase
 {
     /**
-     * @return non-empty-list<non-empty-list<mixed>>
+     * @return \Generator<array{template: string, replacements: non-empty-array<non-empty-string, ImmutableReplacementInterface>, value: mixed, expectedString: string}>
+     * @noinspection SpellCheckingInspection
      */
-    public static function provideTestData(): array
+    public static function provideTestData(): \Generator
     {
         $replacements = Replacements::get();
 
-        /** @noinspection SpellCheckingInspection */
-        return [
-            ['', $replacements, new Stringable4Testing(), ''],
-            ['{type}', $replacements, new Stringable4Testing(), 'object'],
-            ['a{type}', $replacements, new Stringable4Testing(), 'aobject'],
-            ['{type}b', $replacements, new Stringable4Testing(), 'objectb'],
-            ['a{type}b', $replacements, new Stringable4Testing(), 'aobjectb'],
-            ['{type}{type}', $replacements, new Stringable4Testing(), 'objectobject'],
-            ['{type}a{type}', $replacements, new Stringable4Testing(), 'objectaobject'],
-            ['{class:name}', $replacements, new Stringable4Testing(), 'Stringable4Testing'],
-            ['{namespace}', $replacements, new Stringable4Testing(), 'Iomywiab\Library\Testing\DataTypes'],
-            ['{type:extended}', $replacements, 'abc', 'non-empty-string'],
-            ['{array:size}', $replacements, [1, 2, 3], '3'],
-            ['{string:length}', $replacements, 'abc', '3'],
-            ['{value}', $replacements, 'abc', '"abc"'],
-            ['{array:key:type}', $replacements, [1, 'a', true], 'int'],
-            ['{array:key:type:extended}', $replacements, [1, 'a', true], 'non-negative-int|positive-int'],
-            ['{array:value:type}', $replacements, [1, 'a', true], 'bool|int|string'],
-            ['{array:value:type:extended}', $replacements, [1, 'a', true], 'bool|non-empty-string|positive-int'],
-        ];
+        yield ['template' => '', 'replacements' => $replacements, 'value' => new Stringable4Testing(), 'expectedString' => ''];
+        yield ['template' => '{type}', 'replacements' => $replacements, 'value' => new Stringable4Testing(), 'expectedString' => 'object'];
+        yield ['template' => 'a{type}', 'replacements' => $replacements, 'value' => new Stringable4Testing(), 'expectedString' => 'aobject'];
+        yield ['template' => '{type}b', 'replacements' => $replacements, 'value' => new Stringable4Testing(), 'expectedString' => 'objectb'];
+        yield ['template' => 'a{type}b', 'replacements' => $replacements, 'value' => new Stringable4Testing(), 'expectedString' => 'aobjectb'];
+        yield ['template' => '{type}{type}', 'replacements' => $replacements, 'value' => new Stringable4Testing(), 'expectedString' => 'objectobject'];
+        yield ['template' => '{type}a{type}', 'replacements' => $replacements, 'value' => new Stringable4Testing(), 'expectedString' => 'objectaobject'];
+        yield ['template' => '{class:name}', 'replacements' => $replacements, 'value' => new Stringable4Testing(), 'expectedString' => 'Stringable4Testing'];
+        yield ['template' => '{namespace}', 'replacements' => $replacements, 'value' => new Stringable4Testing(), 'expectedString' => 'Iomywiab\Library\Testing\DataTypes'];
+        yield ['template' => '{type:extended}', 'replacements' => $replacements, 'value' => 'abc', 'expectedString' => 'non-empty-string'];
+        yield ['template' => '{array:size}', 'replacements' => $replacements, 'value' => [1, 2, 3], 'expectedString' => '3'];
+        yield ['template' => '{string:length}', 'replacements' => $replacements, 'value' => 'abc', 'expectedString' => '3'];
+        yield ['template' => '{value}', 'replacements' => $replacements, 'value' => 'abc', 'expectedString' => '"abc"'];
+        yield ['template' => '{array:key:type}', 'replacements' => $replacements, 'value' => [1, 'a', true], 'expectedString' => 'int'];
+        yield ['template' => '{array:key:type:extended}', 'replacements' => $replacements, 'value' => [1, 'a', true], 'expectedString' => 'non-negative-int|positive-int'];
+        yield ['template' => '{array:value:type}', 'replacements' => $replacements, 'value' => [1, 'a', true], 'expectedString' => 'bool|int|string'];
+        yield ['template' => '{array:value:type:extended}', 'replacements' => $replacements, 'value' => [1, 'a', true], 'expectedString' => 'bool|non-empty-string|positive-int'];
     }
 
     /**

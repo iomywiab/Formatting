@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: FormatTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 17:22
+ * Modified at: 30/07/2025, 13:45
  * Modified by: pnehls
  */
 
@@ -82,52 +82,55 @@ use PHPUnit\Framework\TestCase;
 class FormatTest extends TestCase
 {
     /**
-     * @return non-empty-list<non-empty-list<mixed>>
+     * @return \Generator<array{isValid: bool, value: mixed, expectedString: string, expectedDebugString: string}>
      * @throws \Exception
      */
-    // @phpstan-ignore throws.unusedType
-    public static function provideTestDataForString(): array
+    public static function provideTestDataForString(): \Generator
     {
         $timezone = new \DateTimeZone('UTC');
 
-        return [
+        $validValues = [
             // array
-            [true, [], '[]', 'list(0)<,>:[]'],
-            [true, [1], '[0=>1]', 'non-empty-list(1)<non-negative-int,positive-int>:[0=>1]'],
-            [true, [1, 'a'], '[0=>1, 1=>"a"]', 'non-empty-list(2)<non-negative-int|positive-int,non-empty-string|positive-int>:[0=>1, 1=>"a"]'],
+            [[], '[]', 'list(0)<,>:[]'],
+            [[1], '[0=>1]', 'non-empty-list(1)<non-negative-int,positive-int>:[0=>1]'],
+            [[1, 'a'], '[0=>1, 1=>"a"]', 'non-empty-list(2)<non-negative-int|positive-int,non-empty-string|positive-int>:[0=>1, 1=>"a"]'],
 
             // boolean
-            [true, true, 'true', 'bool:true'],
-            [true, false, 'false', 'bool:false'],
+            [true, 'true', 'bool:true'],
+            [false, 'false', 'bool:false'],
 
             // date
-            [true, new \DateTime('1970-01-01', $timezone), '1970-01-01T00:00:00+00:00', 'datetime<DateTime>:1970-01-01T00:00:00+00:00'],
-            [true, new \DateTime('2025-06-26', $timezone), '2025-06-26T00:00:00+00:00', 'datetime<DateTime>:2025-06-26T00:00:00+00:00'],
-            [true, new Stringable4Testing(), '"stringable"', 'object<Stringable4Testing>:"stringable"'],
-            [true, Enum4Testing::ONE, 'ONE', 'unit-enum<Enum4Testing>:ONE'],
-            [true, IntEnum4Testing::ONE, 'ONE=1', 'int-enum<IntEnum4Testing>:ONE=1'],
-            [true, StringEnum4Testing::ONE, 'ONE="One"', 'string-enum<StringEnum4Testing>:ONE="One"'],
+            [new \DateTime('1970-01-01', $timezone), '1970-01-01T00:00:00+00:00', 'datetime<DateTime>:1970-01-01T00:00:00+00:00'],
+            [new \DateTime('2025-06-26', $timezone), '2025-06-26T00:00:00+00:00', 'datetime<DateTime>:2025-06-26T00:00:00+00:00'],
+            [new Stringable4Testing(), '"stringable"', 'object<Stringable4Testing>:"stringable"'],
+            [Enum4Testing::ONE, 'ONE', 'unit-enum<Enum4Testing>:ONE'],
+            [IntEnum4Testing::ONE, 'ONE=1', 'int-enum<IntEnum4Testing>:ONE=1'],
+            [StringEnum4Testing::ONE, 'ONE="One"', 'string-enum<StringEnum4Testing>:ONE="One"'],
 
             // float
-            [true, -1.0, '-1.0', 'negative-float:-1.0'],
-            [true, 1.0, '1.0', 'positive-float:1.0'],
-            [true, 0.0, '0.0', 'non-negative-float:0.0'],
-            [true, -2.3, '-2.3', 'negative-float:-2.3'],
-            [true, 2.3, '2.3', 'positive-float:2.3'],
+            [-1.0, '-1.0', 'negative-float:-1.0'],
+            [1.0, '1.0', 'positive-float:1.0'],
+            [0.0, '0.0', 'non-negative-float:0.0'],
+            [-2.3, '-2.3', 'negative-float:-2.3'],
+            [2.3, '2.3', 'positive-float:2.3'],
 
             // integer
-            [true, -1, '-1', 'negative-int:-1'],
-            [true, 0, '0', 'non-negative-int:0'],
-            [true, 1, '1', 'positive-int:1'],
+            [-1, '-1', 'negative-int:-1'],
+            [0, '0', 'non-negative-int:0'],
+            [1, '1', 'positive-int:1'],
 
             // null
-            [true, null, Convert::NULL_STRING, Convert::NULL_STRING],
+            [null, Convert::NULL_STRING, Convert::NULL_STRING],
 
             // string
-            [true, '-1', '"-1"', 'non-empty-string(2):"-1"'],
-            [true, '0', '"0"', 'non-empty-string(1):"0"'],
-            [true, '1', '"1"', 'non-empty-string(1):"1"'],
+            ['-1', '"-1"', 'non-empty-string(2):"-1"'],
+            ['0', '"0"', 'non-empty-string(1):"0"'],
+            ['1', '"1"', 'non-empty-string(1):"1"'],
         ];
+
+        foreach ($validValues as $item) {
+            yield ['isValid' => true, 'value' => $item[0], 'expectedString' => $item[1], 'expectedDebugString' => $item[2]];
+        }
     }
 
     /**

@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableObjectFormatterTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 15:40
+ * Modified at: 30/07/2025, 13:16
  * Modified by: pnehls
  */
 
@@ -24,7 +24,6 @@ use Iomywiab\Library\Formatting\Replacers\ImmutableTemplateReplacer;
 use Iomywiab\Library\Testing\DataTypes\Enum4Testing;
 use Iomywiab\Library\Testing\DataTypes\Stringable4Testing;
 use Iomywiab\Library\Testing\DataTypes\StringEnum4Testing;
-use Iomywiab\Library\Testing\Values\DataProvider;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
@@ -42,20 +41,16 @@ use PHPUnit\Framework\TestCase;
 class ImmutableObjectFormatterTest extends TestCase
 {
     /**
-     * @return non-empty-array<non-empty-array<mixed>>
+     * @return \Generator<non-empty-array<mixed>>
      * @throws \Exception
      */
-    public static function provideTestData(): array
+    public static function provideTestData(): \Generator
     {
-        $validData = [
-            [new \DateTime('1970-01-01 00:00:00', new \DateTimeZone('UTC')), '1970-01-01T00:00:00+00:00'],
-            [new \Exception('test'), '"test"'],
-            [Enum4Testing::ONE, 'ONE'],
-            [StringEnum4Testing::ONE, 'ONE="One"'],
-            [new Stringable4Testing(), '"stringable"'],
-        ];
-
-        return DataProvider::injectKeys(['input', 'expectedString'], $validData);
+        yield ['input' => new \DateTime('1970-01-01 00:00:00', new \DateTimeZone('UTC')), 'expectedString' => '1970-01-01T00:00:00+00:00'];
+        yield ['input' => new \Exception('test'), 'expectedString' => '"test"'];
+        yield ['input' => Enum4Testing::ONE, 'expectedString' => 'ONE'];
+        yield ['input' => StringEnum4Testing::ONE, 'expectedString' => 'ONE="One"'];
+        yield ['input' => new Stringable4Testing(), 'expectedString' => '"stringable"'];
     }
 
     /**

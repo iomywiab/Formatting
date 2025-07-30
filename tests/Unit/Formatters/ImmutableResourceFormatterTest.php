@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableResourceFormatterTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 15:40
+ * Modified at: 30/07/2025, 13:16
  * Modified by: pnehls
  */
 
@@ -13,7 +13,6 @@ namespace Iomywiab\Tests\Formatting\Unit\Formatters;
 
 use Iomywiab\Library\Formatting\Exceptions\FormatExceptionInterface;
 use Iomywiab\Library\Formatting\Formatters\ImmutableResourceFormatter;
-use Iomywiab\Library\Testing\Values\DataProvider;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
@@ -23,16 +22,12 @@ use PHPUnit\Framework\TestCase;
 class ImmutableResourceFormatterTest extends TestCase
 {
     /**
-     * @return non-empty-array<non-empty-array<mixed>>
+     * @return \Generator<non-empty-array<mixed>>
      */
-    public static function provideTestData(): array
+    public static function provideTestData(): \Generator
     {
-        $validData = [
-            [null, ''],
-            [STDOUT, 'stream(id:'],
-        ];
-
-        return DataProvider::injectKeys(['input', 'expectedPrefix'], $validData);
+        yield ['input' => null, 'expectedPrefix' => ''];
+        yield ['input' => STDOUT, 'expectedPrefix' => 'stream(id:'];
     }
 
     /**

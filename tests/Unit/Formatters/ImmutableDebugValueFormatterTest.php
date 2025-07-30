@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableDebugValueFormatterTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 15:30
+ * Modified at: 30/07/2025, 13:16
  * Modified by: pnehls
  */
 
@@ -72,10 +72,10 @@ use PHPUnit\Framework\TestCase;
 class ImmutableDebugValueFormatterTest extends TestCase
 {
     /**
-     * @return non-empty-list<non-empty-array<int|non-empty-string,mixed>>
+     * @return \Generator<non-empty-array<int|non-empty-string,mixed>>
      * @throws \Exception
      */
-    public static function provideTestData(): array
+    public static function provideTestData(): \Generator
     {
         $openResource = \fopen('php://memory', 'rb');
         $resourceId = (false === $openResource) ? 'n/a' : \get_resource_id($openResource);
@@ -125,12 +125,9 @@ class ImmutableDebugValueFormatterTest extends TestCase
             [$closedResource, 'resource (closed)'],
         ];
 
-        $data = [];
         foreach ($validData as $item) {
-            $data[] = ['isValid' => true, 'value' => $item[0], 'expectedString' => $item[1]];
+            yield ['isValid' => true, 'value' => $item[0], 'expectedString' => $item[1]];
         }
-
-        return $data;
     }
 
     /**

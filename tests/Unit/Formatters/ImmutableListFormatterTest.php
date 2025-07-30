@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableListFormatterTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 15:41
+ * Modified at: 30/07/2025, 13:16
  * Modified by: pnehls
  */
 
@@ -18,7 +18,6 @@ use Iomywiab\Library\Formatting\Formatters\ImmutableIntegerFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableListFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableObjectFormatter;
 use Iomywiab\Library\Formatting\Formatters\ImmutableValueFormatter;
-use Iomywiab\Library\Testing\Values\DataProvider;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
@@ -32,17 +31,13 @@ use PHPUnit\Framework\TestCase;
 class ImmutableListFormatterTest extends TestCase
 {
     /**
-     * @return non-empty-array<non-empty-array<mixed>>
+     * @return \Generator<non-empty-array<mixed>>
      */
-    public static function provideTestData(): array
+    public static function provideTestData(): \Generator
     {
-        $validData = [
-            [[], ''],
-            [[1], '1'],
-            [[1, 2], '1|2'],
-        ];
-
-        return DataProvider::injectKeys(['inputList', 'expectedString'], $validData);
+        yield ['inputList' => [], 'expectedString' => ''];
+        yield ['inputList' => [1], 'expectedString' => '1'];
+        yield ['inputList' => [1, 2], 'expectedString' => '1|2'];
     }
 
     /**

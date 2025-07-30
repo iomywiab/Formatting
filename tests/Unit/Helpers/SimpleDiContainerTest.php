@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: SimpleDiContainerTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 15:47
+ * Modified at: 30/07/2025, 13:30
  * Modified by: pnehls
  */
 
@@ -31,7 +31,6 @@ use Iomywiab\Library\Formatting\Replacements\ImmutableStringLengthReplacement;
 use Iomywiab\Library\Formatting\Replacements\ImmutableValueReplacement;
 use Iomywiab\Library\Formatting\Replacements\Replacements;
 use Iomywiab\Library\Formatting\Replacers\ImmutableTemplateReplacer;
-use Iomywiab\Library\Testing\Values\DataProvider;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
@@ -63,20 +62,16 @@ class SimpleDiContainerTest extends TestCase
     }
 
     /**
-     * @return non-empty-array<non-empty-array<mixed>>
+     * @return \Generator<non-empty-array<mixed>>
      */
-    public static function provideTestData(): array
+    public static function provideTestData(): \Generator
     {
-        $validData = [
-            ['abc', null, new \stdClass()],
-            ['abc', 'xyz', new \stdClass()],
-            ['abc', null, \stdClass::class],
-            ['abc', 'xyz', \stdClass::class],
-            ['abc', null, [self::class, 'getTestObject']],
-            ['abc', 'xyz', [self::class, 'getTestObject']],
-        ];
-
-        return DataProvider::injectKeys(['id', 'alias', 'concrete'], $validData);
+        yield ['id' => 'abc', 'alias' => null, 'concrete' => new \stdClass()];
+        yield ['id' => 'abc', 'alias' => 'xyz', 'concrete' => new \stdClass()];
+        yield ['id' => 'abc', 'alias' => null, 'concrete' => \stdClass::class];
+        yield ['id' => 'abc', 'alias' => 'xyz', 'concrete' => \stdClass::class];
+        yield ['id' => 'abc', 'alias' => null, 'concrete' => [self::class, 'getTestObject']];
+        yield ['id' => 'abc', 'alias' => 'xyz', 'concrete' => [self::class, 'getTestObject']];
     }
 
     /**

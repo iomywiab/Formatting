@@ -4,7 +4,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: BoolStringEnumTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 00:39
+ * Modified at: 30/07/2025, 13:53
  * Modified by: pnehls
  */
 
@@ -19,6 +19,27 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(BoolStringEnum::class)]
 class BoolStringEnumTest extends TestCase
 {
+    public static function provideTestData(): \Generator
+    {
+        yield ['enum' => BoolStringEnum::ACTIVATED, 'expectedBool' => true];
+        yield ['enum' => BoolStringEnum::ACTIVE, 'expectedBool' => true];
+        yield ['enum' => BoolStringEnum::DEACTIVATED, 'expectedBool' => false];
+        yield ['enum' => BoolStringEnum::DISABLED, 'expectedBool' => false];
+        yield ['enum' => BoolStringEnum::ENABLED, 'expectedBool' => true];
+        yield ['enum' => BoolStringEnum::FALSE, 'expectedBool' => false];
+        yield ['enum' => BoolStringEnum::INACTIVE, 'expectedBool' => false];
+        yield ['enum' => BoolStringEnum::N, 'expectedBool' => false];
+        yield ['enum' => BoolStringEnum::NO, 'expectedBool' => false];
+        yield ['enum' => BoolStringEnum::OFF, 'expectedBool' => false];
+        yield ['enum' => BoolStringEnum::ON, 'expectedBool' => true];
+        yield ['enum' => BoolStringEnum::ONE, 'expectedBool' => true];
+        yield ['enum' => BoolStringEnum::TRUE, 'expectedBool' => true];
+        yield ['enum' => BoolStringEnum::Y, 'expectedBool' => true];
+        yield ['enum' => BoolStringEnum::YES, 'expectedBool' => true];
+        yield ['enum' => BoolStringEnum::ZERO, 'expectedBool' => false];
+
+    }
+
     /**
      * @return void
      */
@@ -33,54 +54,21 @@ class BoolStringEnumTest extends TestCase
      */
     public function testToArray(): void
     {
-        $array = [
-            BoolStringEnum::ACTIVATED->value   => true,
-            BoolStringEnum::ACTIVE->value      => true,
-            BoolStringEnum::DEACTIVATED->value => false,
-            BoolStringEnum::DISABLED->value    => false,
-            BoolStringEnum::ENABLED->value     => true,
-            BoolStringEnum::FALSE->value       => false,
-            BoolStringEnum::INACTIVE->value    => false,
-            BoolStringEnum::N->value           => false,
-            BoolStringEnum::NO->value          => false,
-            BoolStringEnum::OFF->value         => false,
-            BoolStringEnum::ON->value          => true,
-            BoolStringEnum::ONE->value         => true,
-            BoolStringEnum::TRUE->value        => true,
-            BoolStringEnum::Y->value           => true,
-            BoolStringEnum::YES->value         => true,
-            BoolStringEnum::ZERO->value        => false,
-        ];
-
-        self::assertEquals($array, BoolStringEnum::toArray());
+        $expected = [];
+        foreach (BoolStringEnum::cases() as $case) {
+            $expected [$case->value] = $case->toBool();
+        }
+        self::assertEquals($expected, BoolStringEnum::toArray());
     }
 
     /**
+     * @param BoolStringEnum $enum
+     * @param bool $expectedBool
      * @return void
+     * @dataProvider provideTestData
      */
-    public function testToBool(): void
+    public function testToBool(BoolStringEnum $enum, bool $expectedBool): void
     {
-        $array = [
-            BoolStringEnum::ACTIVATED->value   => true,
-            BoolStringEnum::ACTIVE->value      => true,
-            BoolStringEnum::DEACTIVATED->value => false,
-            BoolStringEnum::DISABLED->value    => false,
-            BoolStringEnum::ENABLED->value     => true,
-            BoolStringEnum::FALSE->value       => false,
-            BoolStringEnum::INACTIVE->value    => false,
-            BoolStringEnum::N->value           => false,
-            BoolStringEnum::NO->value          => false,
-            BoolStringEnum::OFF->value         => false,
-            BoolStringEnum::ON->value          => true,
-            BoolStringEnum::ONE->value         => true,
-            BoolStringEnum::TRUE->value        => true,
-            BoolStringEnum::Y->value           => true,
-            BoolStringEnum::YES->value         => true,
-            BoolStringEnum::ZERO->value        => false,
-        ];
-
-        foreach (BoolStringEnum::cases() as $case) {
-            self::assertSame($array[$case->value], $case->toBool());
-        }
+        self::assertSame($expectedBool, $enum->toBool());
     }
 }

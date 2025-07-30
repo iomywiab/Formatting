@@ -3,7 +3,7 @@
  * Copyright (c) 2022-2025 Iomywiab/PN, Hamburg, Germany. All rights reserved
  * File name: ImmutableStringFormatterTest.php
  * Project: Formatting
- * Modified at: 28/07/2025, 15:38
+ * Modified at: 30/07/2025, 13:16
  * Modified by: pnehls
  */
 
@@ -20,7 +20,6 @@ use Iomywiab\Library\Formatting\Replacements\AbstractImmutableReplacement;
 use Iomywiab\Library\Formatting\Replacements\ImmutableValueReplacement;
 use Iomywiab\Library\Formatting\Replacements\Replacements;
 use Iomywiab\Library\Formatting\Replacers\ImmutableTemplateReplacer;
-use Iomywiab\Library\Testing\Values\DataProvider;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
@@ -37,16 +36,12 @@ use PHPUnit\Framework\TestCase;
 class ImmutableStringFormatterTest extends TestCase
 {
     /**
-     * @return non-empty-array<non-empty-array<mixed>>
+     * @return \Generator<non-empty-array<mixed>>
      */
-    public static function provideTestData(): array
+    public static function provideTestData(): \Generator
     {
-        $validData = [
-            ['', '""'],
-            ['abc', '"abc"'],
-        ];
-
-        return DataProvider::injectKeys(['inputString', 'expectedString'], $validData);
+        yield ['inputString' => '', 'expectedString' => '""'];
+        yield ['inputString' => 'abc', 'expectedString' => '"abc"'];
     }
 
     /**
